@@ -1,0 +1,578 @@
+<script type="text/javascript">
+var theremoteJsonRetailppl = {};
+$.ajax({
+	url: "{{ 'retailers_data.json' | asset_url }}",
+	async: false,
+	dataType: 'json',
+	success: function(data) {
+		theremoteJsonRetailppl = data;
+	}
+});
+
+//JSON all states, don't really need the state's name but at least I can cross-reference easily.
+var usStates = [
+    { state: 'ALABAMA', abbreviation: 'AL'},
+    { state: 'ALASKA', abbreviation: 'AK'},
+    /*{ state: 'AMERICAN SAMOA', abbreviation: 'AS'},*/
+    { state: 'ARIZONA', abbreviation: 'AZ'},
+    { state: 'ARKANSAS', abbreviation: 'AR'},
+    { state: 'CALIFORNIA', abbreviation: 'CA'},
+    { state: 'COLORADO', abbreviation: 'CO'},
+    { state: 'CONNECTICUT', abbreviation: 'CT'},
+    { state: 'DELAWARE', abbreviation: 'DE'},
+    { state: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
+    /*{ state: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},*/
+    { state: 'FLORIDA', abbreviation: 'FL'},
+    { state: 'GEORGIA', abbreviation: 'GA'},
+    /*{ state: 'GUAM', abbreviation: 'GU'},*/
+    { state: 'HAWAII', abbreviation: 'HI'},
+    { state: 'IDAHO', abbreviation: 'ID'},
+    { state: 'ILLINOIS', abbreviation: 'IL'},
+    { state: 'INDIANA', abbreviation: 'IN'},
+    { state: 'IOWA', abbreviation: 'IA'},
+    { state: 'KANSAS', abbreviation: 'KS'},
+    { state: 'KENTUCKY', abbreviation: 'KY'},
+    { state: 'LOUISIANA', abbreviation: 'LA'},
+    { state: 'MAINE', abbreviation: 'ME'},
+    /*{ state: 'MARSHALL ISLANDS', abbreviation: 'MH'},*/
+    { state: 'MARYLAND', abbreviation: 'MD'},
+    { state: 'MASSACHUSETTS', abbreviation: 'MA'},
+    { state: 'MICHIGAN', abbreviation: 'MI'},
+    { state: 'MINNESOTA', abbreviation: 'MN'},
+    { state: 'MISSISSIPPI', abbreviation: 'MS'},
+    { state: 'MISSOURI', abbreviation: 'MO'},
+    { state: 'MONTANA', abbreviation: 'MT'},
+    { state: 'NEBRASKA', abbreviation: 'NE'},
+    { state: 'NEVADA', abbreviation: 'NV'},
+    { state: 'NEW HAMPSHIRE', abbreviation: 'NH'},
+    { state: 'NEW JERSEY', abbreviation: 'NJ'},
+    { state: 'NEW MEXICO', abbreviation: 'NM'},
+    { state: 'NEW YORK', abbreviation: 'NY'},
+    { state: 'NORTH CAROLINA', abbreviation: 'NC'},
+    { state: 'NORTH DAKOTA', abbreviation: 'ND'},
+    /*{ state: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},*/
+    { state: 'OHIO', abbreviation: 'OH'},
+    { state: 'OKLAHOMA', abbreviation: 'OK'},
+    { state: 'OREGON', abbreviation: 'OR'},
+    /*{ state: 'PALAU', abbreviation: 'PW'},*/
+    { state: 'PENNSYLVANIA', abbreviation: 'PA'},
+    /*{ state: 'PUERTO RICO', abbreviation: 'PR'},*/
+    { state: 'RHODE ISLAND', abbreviation: 'RI'},
+    { state: 'SOUTH CAROLINA', abbreviation: 'SC'},
+    { state: 'SOUTH DAKOTA', abbreviation: 'SD'},
+    { state: 'TENNESSEE', abbreviation: 'TN'},
+    { state: 'TEXAS', abbreviation: 'TX'},
+    { state: 'UTAH', abbreviation: 'UT'},
+    { state: 'VERMONT', abbreviation: 'VT'},
+    /*{ state: 'VIRGIN ISLANDS', abbreviation: 'VI'},*/
+    { state: 'VIRGINIA', abbreviation: 'VA'},
+    { state: 'WASHINGTON', abbreviation: 'WA'},
+    { state: 'WEST VIRGINIA', abbreviation: 'WV'},
+    { state: 'WISCONSIN', abbreviation: 'WI'},
+    { state: 'WYOMING', abbreviation: 'WY' }
+];
+
+//Get the actual retailers data in
+var data={"retailers":theremoteJsonRetailppl}, output = "", stateLiteral = "", outsideUS = "";
+//console.log(data);
+
+/* =================== Logik :: Cause-and-effect ================================*/
+
+//return an array of objects according to key, value, or key and value matching
+function getObjects(obj, key, val) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val));    
+        } else 
+        //if key matches and value matches or if key matches and value is not passed (eliminating the case where key matches but passed value does not)
+        if (i == key && obj[i] == val || i == key && val == '') { //
+            objects.push(obj);
+        } else if (obj[i] == val && key == ''){
+            //only add if the object is not already in the array
+            if (objects.lastIndexOf(obj) == -1){
+                objects.push(obj);
+            }
+        }
+    }
+    return objects;
+}
+
+//return an array of values that match on a certain key
+function getValues(obj, key) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getValues(obj[i], key));
+        } else if (i == key) {
+            objects.push(obj[i]);
+        }
+    }
+    return objects;
+}
+
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+
+function cleanArray(actual){
+  var newArray = new Array();
+  for(var i = 0; i<actual.length; i++){
+      if (actual[i]){
+        newArray.push(actual[i]);
+    }
+  }
+  return newArray;
+}
+
+function replaceState(stateString) {
+  switch (stateString) {
+    		case "AL":
+    			stateLiteral = "Alabama";
+    			outsideUS=false;
+				break;
+			case "AK":
+				stateLiteral = "Alaska";
+				outsideUS=false;
+				break;
+			case "AZ":
+				stateLiteral = "Arizona";
+				outsideUS=false;
+				break;
+			case "AR":
+				stateLiteral = "Arkansas";
+				outsideUS=false;
+				break;
+			case "CA":
+				stateLiteral = "California";
+				outsideUS=false;
+				break;
+			case "CO":
+				stateLiteral = "Colorado";
+				outsideUS=false;
+				break;
+			case "CT":
+				stateLiteral = "Connecticut";
+				outsideUS=false;
+				break;
+			case "DE":
+				stateLiteral = "Delaware";
+				outsideUS=false;
+				break;
+			case "DC":
+				stateLiteral = "District Of Columbia";
+				outsideUS=false;
+				break;
+			case "FL":
+				stateLiteral = "Florida";
+				outsideUS=false;
+				break;
+			case "GA":
+				stateLiteral = "Georgia";
+				outsideUS=false;
+				break;
+			case "HI":
+				stateLiteral = "Hawaii";
+				outsideUS=false;
+				break;
+			case "ID":
+				stateLiteral = "Idaho";
+				outsideUS=false;
+				break;
+			case "IL":
+				stateLiteral = "Illinois";
+				outsideUS=false;
+				break;
+			case "IN":
+				stateLiteral = "Indiana";
+				outsideUS=false;
+				break;
+			case "IA":
+				stateLiteral = "Iowa";
+				outsideUS=false;
+				break;
+			case "KS":
+				stateLiteral = "Kansas";
+				outsideUS=false;
+				break;
+			case "KY":
+				stateLiteral = "Kentucky";
+				outsideUS=false;
+				break;
+			case "LA":
+				stateLiteral = "Louisiana";
+				outsideUS=false;
+				break;
+			case "ME":
+				stateLiteral = "Maine";
+				outsideUS=false;
+				break;
+			case "MD":
+				stateLiteral = "Maryland";
+				outsideUS=false;
+				break;
+			case "MA":
+				stateLiteral = "Massachusetts";
+				outsideUS=false;
+				break;
+			case "MI":
+				stateLiteral = "Michigan";
+				outsideUS=false;
+				break;
+			case "MN":
+				stateLiteral = "Minnesota";
+				outsideUS=false;
+				break;
+			case "MS":
+				stateLiteral = "Mississippi";
+				outsideUS=false;
+				break;
+			case "MO":
+				stateLiteral = "Missouri";
+				outsideUS=false;
+				break;
+			case "MT":
+				stateLiteral = "Montana";
+				outsideUS=false;
+				break;
+			case "NE":
+				stateLiteral = "Nebraska";
+				outsideUS=false;
+				break;
+			case "NV":
+				stateLiteral = "Nevada";
+				outsideUS=false;
+				break;
+			case "NH":
+				stateLiteral = "New Hampshire";
+				outsideUS=false;
+				break;
+			case "NJ":
+				stateLiteral = "New Jersey";
+				outsideUS=false;
+				break;
+			case "NM":
+				stateLiteral = "New Mexico";
+				outsideUS=false;
+				break;
+			case "NY":
+				stateLiteral = "New York";
+				outsideUS=false;
+				break;
+			case "NC":
+				stateLiteral = "North Carolina";
+				outsideUS=false;
+				break;
+			case "ND":
+				stateLiteral = "North Dakota";
+				outsideUS=false;
+				break;
+			case "OH":
+				stateLiteral = "Ohio";
+				outsideUS=false;
+				break;
+			case "OK":
+				stateLiteral = "Oklahoma";
+				outsideUS=false;
+				break;
+			case "OR":
+				stateLiteral = "Oregon";
+				outsideUS=false;
+				break;
+			case "PA":
+				stateLiteral = "Pennsylvania";
+				outsideUS=false;
+				break;
+			case "RI":
+				stateLiteral = "Rhode Island";
+				outsideUS=false;
+				break;
+			case "SC":
+				stateLiteral = "South Carolina";
+				outsideUS=false;
+				break;
+			case "SD":
+				stateLiteral = "South Dakota";
+				outsideUS=false;
+				break;
+			case "TN":
+				stateLiteral = "Tennessee";
+				outsideUS=false;
+				break;
+			case "TX":
+				stateLiteral = "Texas";
+				outsideUS=false;
+				break;
+			case "UT":
+				stateLiteral = "Utah";
+				outsideUS=false;
+				break;
+			case "VT":
+				stateLiteral = "Vermont";
+				outsideUS=false;
+				break;
+			case "VA":
+				stateLiteral = "Virginia";
+				outsideUS=false;
+				break;
+			case "WA":
+				stateLiteral = "Washington";
+				outsideUS=false;
+				break;
+			case "WV":
+				stateLiteral = "West Virginia";
+				outsideUS=false;
+				break;
+			case "WI":
+				stateLiteral = "Wisconsin";
+				outsideUS=false;
+				break;
+			case "WY":
+				stateLiteral = "Wyoming";
+				outsideUS=false;
+			break;
+    		default:
+    		    stateLiteral = stateString;
+    		    outsideUS=true;
+		}
+}
+
+function getIntersect(arr1, arr2) {
+    var r = [], o = {}, l = arr2.length, i, v;
+    for (i = 0; i < l; i++) {
+        o[arr2[i]] = true;
+    }
+    l = arr1.length;
+    for (i = 0; i < l; i++) {
+        v = arr1[i];
+        //get the stateliteral in
+        replaceState(v);
+        if (v in o) {
+        	//mark the intersection
+            r.push({'state':v,'intersected':'yes','stateLiteral':stateLiteral});
+        }
+        else {
+        	//mark the unique values so we can "neutralize" them later on
+            r.push({'state':v,'intersected':'no','stateLiteral':stateLiteral});
+        }
+    }
+    return r;
+}
+
+//create a sorter that can work with JS objects
+var sortByProperty = function(prop) {
+    return function(a,b) {
+        if (typeof a[prop] == "number") {
+            return (a[prop] - b[prop]);
+        } else {
+            return ((a[prop] < b[prop]) ? -1 : ((a[prop] > b[prop]) ? 1 : 0));
+        }
+    };
+};
+
+/* ============================ START ACTING ==============================*/
+
+//Grab all the different states, everywhere in the data, and get them in an Array
+var states = getValues(data,'Province/State');
+
+//clear out the duplicate ones, and sort alphabetically
+var uniqueStates = cleanArray(states.filter( onlyUnique )).sort();
+
+//get the compare array prepared
+var all_the_States = getValues(usStates,'abbreviation');
+
+//cache the totalnumber of Unique States found
+var statesTotal = uniqueStates.length;
+
+//use a starting State value, to start the visualization of the data
+var startingState="CA";
+
+//Separate the US Retailers from the Overseas ones, create new arrays as we go
+var usArr = new Array(),overseasArr = new Array(), all_the_intersected_states = new Array();
+
+for (var x=0;  x < statesTotal; x++) {
+		var state = uniqueStates[x];
+		replaceState(state);
+		if (outsideUS === true) {
+			overseasArr.push({'state':state,'stateLiteral':stateLiteral});
+		}
+		else {
+			usArr.push({'state':state,'stateLiteral':stateLiteral});
+		}
+}
+
+console.log(overseasArr);
+
+//calculate the number of outerloops for the USA
+var usStatesTotal = usArr.length;
+//the number we want to group at
+var groupdivider = 4;
+//calculate the number of outerloops
+var usaStatesOuterloops =  ~~(usStatesTotal/groupdivider);
+
+
+/*Overseas Calculations */
+//calculate the number of outerloops for the Overseas Retailers
+var overseasStatesTotal = overseasArr.length;
+//calculate the number of outerloops
+var overseasStatesOuterloops =  ~~(overseasStatesTotal/groupdivider);
+//get a percentual value we can use for making everything look nice :)
+var overseasPercentual_divide = (100 / (overseasStatesOuterloops + 1 )).toFixed(2);
+
+//cache the totalnumber of All the States (should be 50+1 for DC (federal) = 51, but maybe Russia will become a US state one day :)
+var all_the_statesTotal = all_the_States.length;
+//the number we want to group at
+var all_states_groupdivider = 13;
+//calculate the number of outerloops
+var all_usaStatesOuterloops =  ~~(all_the_statesTotal/all_states_groupdivider);
+//get a percentual value we can use for making everything look nice :)
+var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2);
+
+//Create the Markup Objects for all US Link Outputs 
+var all_the_intersected_states = getIntersect(all_the_States, uniqueStates);
+//console.log(all_the_intersected_states);
+
+output+= '<input id="default-collection-sortby" type="hidden" value="'+startingState.toLowerCase()+'">';
+output+= '<div class="sorter" style="text-align: center;"><label for="sort-by">Select Location: </label>';
+output+= '<select id="sort-by">';
+//create the links for the Overseas Retailers
+for (var j= 0; j < overseasStatesTotal; j++) {
+	overseasState = overseasArr[j].state;
+	overseasStateLiteral = overseasArr[j].stateLiteral;
+	output+= '<option value="'+overseasState.toLowerCase().replace(/\s+/g, '')+'">'+overseasStateLiteral+'</option>';
+}
+//create the links for the US
+for (var j= 0; j < usStatesTotal; j++) {
+    usState = usArr[j].state;
+    usStateLiteral = usArr[j].stateLiteral;
+    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral+'</option>';
+}
+output+= '</select>';
+output+= '</div>';   
+
+
+//create the databoxes
+output+= '<article class="page-textile container"><div class="inner clearfix">';
+for (var x=0;  x < statesTotal; x++) {
+		var state = uniqueStates[x];
+		//get all the objects that contain those unique states
+		var retailersByState = getObjects(data,'Province/State',state);
+		//sort the Objects
+		retailersByState.sort(sortByProperty("Name"));
+		if (state === startingState) { var openState = " open";	}else { var openState ="";}
+		output+= '<div class="collapse-item anim-height'+openState+'" id="'+state.toLowerCase().replace(/\s+/g, '')+'"><div class="collapse-wrap"><div class="collapse-content">';
+		replaceState(state);
+		output+= '<div class="statehead"><h2 class="mobilehide">'+stateLiteral+'</h2></div>';
+		for (var i=0,  tot=retailersByState.length; i < tot; i++) {
+    		//console.log("PAIR " + i + ": " + retailersByState[i].Name);
+    		var name 		= retailersByState[i]["Name"];
+			var address 	= retailersByState[i]["Address"];
+			var address2 	= retailersByState[i]["Address 2"];
+			var city 		= retailersByState[i]["City"];
+			//var thestate	= retailersByState[i]["Province/State"];
+			var country 	= retailersByState[i]["Country"];
+			var zip 		= retailersByState[i]["Postal/Zip Code"];
+			var phone 		= retailersByState[i]["Phone"];
+			//var fax 		= retailersByState[i]["Fax"];
+			//var email 		= retailersByState[i]["Email"];
+			var website 	= retailersByState[i]["Website"];
+			//var hrs 		= retailersByState[i]["Hours"];
+			var lat 		= retailersByState[i]["Latitude"];
+			var lng 		= retailersByState[i]["Longitude"];
+			//var store 		= retailersByState[i]["Store Group"];
+			if (country === "US") { var whereIntheWorld = "usa"; var thestate = retailersByState[i]["Province/State"]; } else { var thestate = country; var whereIntheWorld = "overseas"}
+ 			output+= '<div class="retailers_info '+whereIntheWorld+'"><ul>';
+			
+			if (website !=="") {
+				output+='<li class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
+			} else {
+				output+='<li class="just_the_name">' + name + '</li>';
+			}
+
+			output+='<li>' + address + '</li>';
+			if (address2 !=="") {
+				output+='<li>' + address2 + '</li>';
+			}
+			
+			if (city !=="") {
+			output+='<li>' + city + ', ' + thestate +' '+ zip + '</li>';
+			}
+			
+			if (phone !=="") {
+				output+='<li>' +phone + '</li>';
+			}
+
+			/*if (website !=="") {
+				output+='<li style="word-wrap: break-word;">' + website +'</li>';
+			}
+			*/
+			//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
+  			output+='</ul></div>';
+
+
+  			
+		}
+		output+= '</div></div></div>';
+	}
+output+= '</div></article>';
+
+	
+    document.getElementById("retailers_placeholder").innerHTML=output;
+
+
+//Use jquery for toggling 
+$(document).ready(function() {
+	InitSorter();
+});
+var InitSorter = function(){
+  
+  var sortElement = $('#sort-by');
+  sortElement
+  .val($('#default-collection-sortby').val())
+  .bind('change', function() {
+    var closeBtn = ($(this).attr('data-collapse') == 'false') ? true : false;
+    var collapseEl = '#'+$(this).val();
+    var collapseItem = $(collapseEl);
+    //Open Accordion
+        var toggleCollapse = function(item, type){
+          if(type == 'close'){
+            item
+              .removeClass('open')
+              .height(0);
+          } else {
+            item
+              .height(item.find('.collapse-wrap').height())
+              .addClass('open');
+          }      
+        };
+
+        //Toggle View
+        if(collapseItem.is('.open')){
+          var itemToClose = collapseItem;
+          if(itemToClose)toggleCollapse(itemToClose, 'close');
+        } else {
+          if(collapseItem.parents().find('.open').length){
+            toggleCollapse($('.collapse-item.open'), 'close');
+            setTimeout(function(){
+              toggleCollapse(collapseItem, 'open');
+            }, 350);
+          } else {
+            toggleCollapse(collapseItem, 'open');
+          }
+        }
+
+   
+  });
+
+  sortElement.addClass('hidden');
+  var selectBox = new SelectBox({
+    selectbox:sortElement,
+    changeCallback:function(value){
+      sortElement.trigger('change');
+    }
+  });
+
+};
+</script>
