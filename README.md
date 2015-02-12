@@ -1,1 +1,1 @@
-# shopify-jsonStoreLister
+# Shopify JSON Store Lister
