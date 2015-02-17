@@ -73,7 +73,7 @@ var usStates = [
 ];
 
 //Get the actual retailers data in
-var data={"retailers":theremoteJsonRetailppl}, output = "", stateLiteral = "", outsideUS = "";
+var data={"retailers":theremoteJsonRetailppl}, output = "", stateLiteral = "", outsideUS = "", physicalStore = "", domRemoval = "";
 //console.log(data);
 
 /* =================== Logik :: Cause-and-effect ================================*/
@@ -132,210 +132,267 @@ function replaceState(stateString) {
     		case "AL":
     			stateLiteral = "Alabama";
     			outsideUS=false;
+    			physicalStore=true;
 				break;
 			case "AK":
 				stateLiteral = "Alaska";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "AZ":
 				stateLiteral = "Arizona";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "AR":
 				stateLiteral = "Arkansas";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "CA":
 				stateLiteral = "California";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "CO":
 				stateLiteral = "Colorado";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "CT":
 				stateLiteral = "Connecticut";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "DE":
 				stateLiteral = "Delaware";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "DC":
 				stateLiteral = "District Of Columbia";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "FL":
 				stateLiteral = "Florida";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "GA":
 				stateLiteral = "Georgia";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "HI":
 				stateLiteral = "Hawaii";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "ID":
 				stateLiteral = "Idaho";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "IL":
 				stateLiteral = "Illinois";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "IN":
 				stateLiteral = "Indiana";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "IA":
 				stateLiteral = "Iowa";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "KS":
 				stateLiteral = "Kansas";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "KY":
 				stateLiteral = "Kentucky";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "LA":
 				stateLiteral = "Louisiana";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "ME":
 				stateLiteral = "Maine";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MD":
 				stateLiteral = "Maryland";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MA":
 				stateLiteral = "Massachusetts";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MI":
 				stateLiteral = "Michigan";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MN":
 				stateLiteral = "Minnesota";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MS":
 				stateLiteral = "Mississippi";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MO":
 				stateLiteral = "Missouri";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "MT":
 				stateLiteral = "Montana";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NE":
 				stateLiteral = "Nebraska";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NV":
 				stateLiteral = "Nevada";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NH":
 				stateLiteral = "New Hampshire";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NJ":
 				stateLiteral = "New Jersey";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NM":
 				stateLiteral = "New Mexico";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NY":
 				stateLiteral = "New York";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "NC":
 				stateLiteral = "North Carolina";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "ND":
 				stateLiteral = "North Dakota";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "OH":
 				stateLiteral = "Ohio";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "OK":
 				stateLiteral = "Oklahoma";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "OR":
 				stateLiteral = "Oregon";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "PA":
 				stateLiteral = "Pennsylvania";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "RI":
 				stateLiteral = "Rhode Island";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "SC":
 				stateLiteral = "South Carolina";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "SD":
 				stateLiteral = "South Dakota";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "TN":
 				stateLiteral = "Tennessee";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "TX":
 				stateLiteral = "Texas";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "UT":
 				stateLiteral = "Utah";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "VT":
 				stateLiteral = "Vermont";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "VA":
 				stateLiteral = "Virginia";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "WA":
 				stateLiteral = "Washington";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "WV":
 				stateLiteral = "West Virginia";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "WI":
 				stateLiteral = "Wisconsin";
 				outsideUS=false;
+				physicalStore=true;
 				break;
 			case "WY":
 				stateLiteral = "Wyoming";
 				outsideUS=false;
+				physicalStore=true;
+			break;
+			case "ONLINE":
+				stateLiteral = "ONLINE";
+				outsideUS=true;
+				physicalStore=false;
 			break;
     		default:
     		    stateLiteral = stateString;
     		    outsideUS=true;
+    		    physicalStore=true;
 		}
 }
 
@@ -376,43 +433,42 @@ var sortByProperty = function(prop) {
 
 //Grab all the different states, everywhere in the data, and get them in an Array
 var states = getValues(data,'Province/State');
-
 //clear out the duplicate ones, and sort alphabetically
 var uniqueStates = cleanArray(states.filter( onlyUnique )).sort();
-
 //get the compare array prepared
 var all_the_States = getValues(usStates,'abbreviation');
-
 //cache the totalnumber of Unique States found
 var statesTotal = uniqueStates.length;
-
 //use a starting State value, to start the visualization of the data
 var startingState="CA";
-
 //Separate the US Retailers from the Overseas ones, create new arrays as we go
 var usArr = new Array(),overseasArr = new Array(), all_the_intersected_states = new Array();
 
 for (var x=0;  x < statesTotal; x++) {
-		var state = uniqueStates[x];
-		replaceState(state);
-		if (outsideUS === true) {
-			overseasArr.push({'state':state,'stateLiteral':stateLiteral});
-		}
-		else {
-			usArr.push({'state':state,'stateLiteral':stateLiteral});
-		}
+	var state = uniqueStates[x];
+	replaceState(state);
+	
+	if ((outsideUS === true) && (physicalStore === true)) {
+		overseasArr.push({'state':state,'stateLiteral':stateLiteral});
+		console.log('Non US store'+state+' stateLiteral '+stateLiteral);
+	}
+	else if ((outsideUS === false) && (physicalStore === true)) {
+		usArr.push({'state':state,'stateLiteral':stateLiteral});
+		//console.log('US store'+state+' stateLiteral'+stateLiteral);
+	}
+	else{
+		// if it is an online store
+		//console.log('online store'+state+' stateLiteral'+stateLiteral);
+	}
 }
 
 console.log(overseasArr);
-
 //calculate the number of outerloops for the USA
 var usStatesTotal = usArr.length;
 //the number we want to group at
 var groupdivider = 4;
 //calculate the number of outerloops
 var usaStatesOuterloops =  ~~(usStatesTotal/groupdivider);
-
-
 /*Overseas Calculations */
 //calculate the number of outerloops for the Overseas Retailers
 var overseasStatesTotal = overseasArr.length;
@@ -420,7 +476,6 @@ var overseasStatesTotal = overseasArr.length;
 var overseasStatesOuterloops =  ~~(overseasStatesTotal/groupdivider);
 //get a percentual value we can use for making everything look nice :)
 var overseasPercentual_divide = (100 / (overseasStatesOuterloops + 1 )).toFixed(2);
-
 //cache the totalnumber of All the States (should be 50+1 for DC (federal) = 51, but maybe Russia will become a US state one day :)
 var all_the_statesTotal = all_the_States.length;
 //the number we want to group at
@@ -429,150 +484,393 @@ var all_states_groupdivider = 13;
 var all_usaStatesOuterloops =  ~~(all_the_statesTotal/all_states_groupdivider);
 //get a percentual value we can use for making everything look nice :)
 var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2);
-
 //Create the Markup Objects for all US Link Outputs 
 var all_the_intersected_states = getIntersect(all_the_States, uniqueStates);
 //console.log(all_the_intersected_states);
 
-output+= '<input id="default-collection-sortby" type="hidden" value="'+startingState.toLowerCase()+'">';
-output+= '<div class="sorter" style="text-align: center;"><label for="sort-by">Select Location: </label>';
-output+= '<select id="sort-by">';
-//create the links for the Overseas Retailers
-for (var j= 0; j < overseasStatesTotal; j++) {
-	overseasState = overseasArr[j].state;
-	overseasStateLiteral = overseasArr[j].stateLiteral;
-	output+= '<option value="'+overseasState.toLowerCase().replace(/\s+/g, '')+'">'+overseasStateLiteral+'</option>';
-}
-//create the links for the US
-for (var j= 0; j < usStatesTotal; j++) {
-    usState = usArr[j].state;
-    usStateLiteral = usArr[j].stateLiteral;
-    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral+'</option>';
-}
-output+= '</select>';
-output+= '</div>';   
+{% if settings.store_locator_use_selectBox == "dropdown" %}
+	output+= '<input id="default-collection-sortby" type="hidden" value="'+startingState.toLowerCase()+'">';
+	output+= '<div class="sorter" style="text-align: center;"><label for="sort-by">Select Location: </label>';
+	output+= '<select id="sort-by">';
+	{% if settings.store_locator_show_Online %}
+		//create the links for the Online stores
+		output+= '<option value="online">Online Stores</option>';
+	{% endif %}
+	//create the links for the Overseas Retailers
+	{% if settings.store_locator_show_Overseas %}
+		{% if settings.store_locator_aggreagate_Overseas %}
+			output+= '<option value="international">International Stores</option>';
+		{% else %}
+			for (var j= 0; j < overseasStatesTotal; j++) {
+				overseasState = overseasArr[j].state;
+				overseasStateLiteral = overseasArr[j].stateLiteral;
+				output+= '<option value="'+overseasState.toLowerCase().replace(/\s+/g, '')+'">'+overseasStateLiteral+'</option>';
+			}
+		{% endif %}
+	{% endif %}
+	
+	//create the links for the US
+	for (var j= 0; j < usStatesTotal; j++) {
+	    usState = usArr[j].state;
+	    usStateLiteral = usArr[j].stateLiteral;
+	    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral+'</option>';
+	}
+	output+= '</select>';
+	output+= '</div>';   
+{% elsif settings.store_locator_use_selectBox == "links" %}
+	var thelinksWidth = 20;
+	//create the links for the US Retailers shown in the retailers_data.liquid, uncomment if you want to show
+	output+= '<div class="fluidwhite"><div class="menu-items container"><div class="inner clearfix">';
+	//create the links for the US
+	output+= '<div class="menu-item-holder US-retailers">';
+	output+= '<div class="findus in-us">United States</div>';
+	outerloop:
+    	for (var i=0; i <= usaStatesOuterloops; i++) { //Runs 1 time every 8 states, 2 times for 16 states found ... 
+    		output+= '<ul class="separator">';
+      		for (var j= groupdivider*i; j < groupdivider*i+groupdivider; j++) {
+      			//making sure we're not returning undefined.		
+      			if ( j === usStatesTotal) {
+					break outerloop;
+        		}
+        		usState = usArr[j].state;
+        		usStateLiteral = usArr[j].stateLiteral;
+        		if (usState === startingState) { var activeclass = " active";	}else { var activeclass = "";}
+				output+= '<li style = "width:'+thelinksWidth+'%"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
+      		}
+      		output+= '</ul>';
+    	}
+	output+= '</div>';
+	//End of US retailers
+	{% if settings.store_locator_show_Overseas %}
+		//create the links for the Overseas Retailers
+		output+= '<div class="menu-item-holder overseas-retailers">';
+		output+= '<div class="findus in-overseas">Overseas</div>';
+		outerloop:
+    		for (var i=0; i <= overseasStatesOuterloops; i++) { //Runs 1 time every 8 states, 2 times for 16 states found ... 
+    			output+= '<ul class="separator" style = "width:'+overseasPercentual_divide+'%">';
+    	  		for (var j= groupdivider*i; j < groupdivider*i+groupdivider; j++) {
+    	  			//making sure we're not returning undefined. 
+    	  			if ( j === overseasStatesTotal) {
+					break outerloop;
+        			}
+        			overseasState = overseasArr[j].state;
+        			overseasStateLiteral = overseasArr[j].stateLiteral;
+        			if (overseasState === startingState) { var data_collapse = "false";	}else { var data_collapse = "true"; }
+					output+= '<li><a class="togglers" id="state-'+overseasState+'" data-collapse="true" data-collapse-el="#'+overseasState.toLowerCase().replace(/\s+/g, '')+'" data-id="'+overseasState.toLowerCase()+'">'+overseasStateLiteral+'</a></li>';
+      			}
+      			output+= '</ul>';
+    		}
+		output+= '</div>';
+	//End of overseas retailers
+	{% endif %}
 
+	{% if settings.store_locator_show_Online %}
+		//create the links for the Online Retailers
+		output+= '<div class="menu-item-holder overseas-retailers">';
+		output+= '<div class="findus in-overseas">Online</div>';
+		output+= '<ul class="separator" style = "width:100%;">';
+		output+= '<li><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#online" data-id="online">All Online Stores</a></li>';
+		output+= '</ul>';
+		output+= '</div>';
+
+	{% endif %}
+
+
+output+= '</div></div></div>';
+{% endif %}
 
 //create the databoxes
-output+= '<article class="page-textile container"><div class="inner clearfix">';
-for (var x=0;  x < statesTotal; x++) {
-		var state = uniqueStates[x];
-		//get all the objects that contain those unique states
-		var retailersByState = getObjects(data,'Province/State',state);
-		//sort the Objects
-		retailersByState.sort(sortByProperty("Name"));
-		if (state === startingState) { var openState = " open";	}else { var openState ="";}
-		output+= '<div class="collapse-item anim-height'+openState+'" id="'+state.toLowerCase().replace(/\s+/g, '')+'"><div class="collapse-wrap"><div class="collapse-content">';
-		replaceState(state);
-		output+= '<div class="statehead"><h2 class="mobilehide">'+stateLiteral+'</h2></div>';
-		for (var i=0,  tot=retailersByState.length; i < tot; i++) {
-    		//console.log("PAIR " + i + ": " + retailersByState[i].Name);
-    		var name 		= retailersByState[i]["Name"];
-			var address 	= retailersByState[i]["Address"];
-			var address2 	= retailersByState[i]["Address 2"];
-			var city 		= retailersByState[i]["City"];
-			//var thestate	= retailersByState[i]["Province/State"];
-			var country 	= retailersByState[i]["Country"];
-			var zip 		= retailersByState[i]["Postal/Zip Code"];
-			var phone 		= retailersByState[i]["Phone"];
-			//var fax 		= retailersByState[i]["Fax"];
-			//var email 		= retailersByState[i]["Email"];
-			var website 	= retailersByState[i]["Website"];
-			//var hrs 		= retailersByState[i]["Hours"];
-			var lat 		= retailersByState[i]["Latitude"];
-			var lng 		= retailersByState[i]["Longitude"];
-			//var store 		= retailersByState[i]["Store Group"];
-			if (country === "US") { var whereIntheWorld = "usa"; var thestate = retailersByState[i]["Province/State"]; } else { var thestate = country; var whereIntheWorld = "overseas"}
- 			output+= '<div class="retailers_info '+whereIntheWorld+'"><ul>';
-			
-			if (website !=="") {
-				output+='<li class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
-			} else {
-				output+='<li class="just_the_name">' + name + '</li>';
-			}
 
-			output+='<li>' + address + '</li>';
-			if (address2 !=="") {
-				output+='<li>' + address2 + '</li>';
-			}
-			
-			if (city !=="") {
-			output+='<li>' + city + ', ' + thestate +' '+ zip + '</li>';
-			}
-			
-			if (phone !=="") {
-				output+='<li>' +phone + '</li>';
-			}
+output+= '<article class="container">';
+{% if settings.store_locator_use_selectBox == "none" %}
+output+= '<div><h2 class="regionheading">USA</h2></div>';
+{% endif %}
+output+= '<div class="inner clearfix masonry-ready">';
 
-			/*if (website !=="") {
-				output+='<li style="word-wrap: break-word;">' + website +'</li>';
-			}
-			*/
-			//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
-  			output+='</ul></div>';
-
-
-  			
-		}
+{% if settings.store_locator_use_selectBox == "dropdown" %}
+	{% if settings.store_locator_aggreagate_Overseas %}
+		output+= '<div class="collapse-item anim-height" id="international"><div class="collapse-wrap"><div class="collapse-content">';
+		output+= '<div id="nonUSphysical"></div>';
 		output+= '</div></div></div>';
+	{% endif %}
+{% endif %}
+
+for (var x=0;  x < statesTotal; x++) {
+	var state = uniqueStates[x];
+	//get all the objects that contain those unique states
+	var retailersByState = getObjects(data,'Province/State',state);
+	//sort the Objects
+	retailersByState.sort(sortByProperty("Name"));
+	replaceState(state);
+
+	if ((outsideUS === true) && (physicalStore === true)) {
+		var domChange = "domchange-outsider"; 
+		{% if settings.store_locator_use_selectBox == "dropdown" %}
+			{% if settings.store_locator_aggreagate_Overseas %}
+				var domRemoval = "removeFromDom";
+			{% else %}
+				var domRemoval = " ";
+			{% endif %}
+		{% endif %}
 	}
+	else if ((outsideUS === false) && (physicalStore === true)) {
+		var domChange = "no-domchange";var domRemoval = " ";
+	}
+	else{
+		var domChange = "onlinewrapped";var domRemoval = " ";
+	}
+
+	{% unless settings.store_locator_use_selectBox == "none" %}
+		if (state === startingState) { var openState = " open";	} else { var openState ="";}
+		output+= '<div class="collapse-item '+domRemoval+' anim-height'+openState+'" id="'+state.toLowerCase().replace(/\s+/g, '')+'">';
+		output+= '<div class="collapse-wrap"><div class="collapse-content">';
+		{% if settings.store_locator_use_selectBox == "dropdown" %}
+			{% if settings.store_locator_aggreagate_Overseas %}
+				var domRemoval = "removeFromDom";
+				output+= '<div class="aggregatorhold '+domChange+'">';
+			{% endif %}
+		{% endif %}
+	{% endunless %}
+
+	{% if settings.store_locator_use_selectBox == "none" %}
+		//different output for online stores, we need one more div to store those ones under
+		if ((outsideUS === true) && (physicalStore === false)) {
+			output+= '<div id="'+domChange+'" data-state="'+state.toLowerCase().replace(/\s+/g, '')+'">';
+		}
+		else {
+			output+= '<div class="simple-list '+domChange+'" data-state="'+state.toLowerCase().replace(/\s+/g, '')+'">';
+		}
+		output+= '<div class="no-collapse"><div class="no-collapse-content">';
+	{% endif %}
+  	
+	output+= '<div class="statehead"><h2 class="thestate">'+stateLiteral+'</h2></div>';
+	for (var i=0,  tot=retailersByState.length; i < tot; i++) {
+    	//console.log("PAIR " + i + ": " + retailersByState[i].Name);
+    	var name 		= retailersByState[i]["Name"];
+		var address 	= retailersByState[i]["Address"];
+		var address2 	= retailersByState[i]["Address 2"];
+		var city 		= retailersByState[i]["City"];
+		//var thestate	= retailersByState[i]["Province/State"];
+		var country 	= retailersByState[i]["Country"];
+		var zip 		= retailersByState[i]["Postal/Zip Code"];
+		var phone 		= retailersByState[i]["Phone"];
+		//var fax 		= retailersByState[i]["Fax"];
+		//var email 		= retailersByState[i]["Email"];
+		var website 	= retailersByState[i]["Website"];
+		//var hrs 		= retailersByState[i]["Hours"];
+		var lat 		= retailersByState[i]["Latitude"];
+		var lng 		= retailersByState[i]["Longitude"];
+		//var store 		= retailersByState[i]["Store Group"];
+		if ((outsideUS === true) && (physicalStore === true)) { 
+			var thestate = retailersByState[i]["Province/State"]; var whereIntheWorld = "overseas"; var retailClass="retailers_info";
+		} 
+		else if ((outsideUS === false) && (physicalStore === true)) {
+			var thestate = country; var whereIntheWorld = "usa"; var retailClass="retailers_info";
+		}
+		else { 
+			var thestate = country; var whereIntheWorld = "onlinestores domchange-online"; var retailClass="onlineClass";
+		}
+
+ 		output+= '<div class="times-'+tot+' '+retailClass+' '+whereIntheWorld+'"><ul>';
+			
+		if (website !=="") {
+			output+='<li class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
+		} else {
+			output+='<li class="just_the_name">' + name + '</li>';
+		}
+		if (address !=="") {
+		output+='<li>' + address + '</li>';
+		}
+		if (address2 !=="") {
+			output+='<li>' + address2 + '</li>';
+		}
+		if (city !=="") {
+			output+='<li>' + city + ', ' + thestate +' '+ zip + '</li>';
+		}
+		if (phone !=="") {
+			output+='<li>' +phone + '</li>';
+		}
+		/*if (website !=="") {
+			output+='<li style="word-wrap: break-word;">' + website +'</li>';
+		}
+		*/
+		//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
+		output+='</ul></div>';
+	}
+	output+= '</div></div></div>';
+	{% if settings.store_locator_use_selectBox == "dropdown" %}
+		{% if settings.store_locator_aggreagate_Overseas %}
+			output+= '</div>';
+		{% endif %}
+	{% endif %}
+}
 output+= '</div></article>';
 
+//Create the necessary Placeholders for the rest of the Divisions
+{% if settings.store_locator_use_selectBox == "none" %}
 	
-    document.getElementById("retailers_placeholder").innerHTML=output;
+	{% if settings.store_locator_show_Overseas %}
+		output+= '<article class="container"><div><h2 class="regionheading">International</h2></div><div id="nonUSphysical" class="inner clearfix masonry-ready">';
+		output+= '</div></article>';
+	{% endif %}
+
+	{% if settings.store_locator_show_Online %}
+		output+= '<article class="container"><div><h2 class="regionheading">Online</h2></div><div id="onlineStores" class="inner clearfix masonry-ready">';
+		output+= '</div></article>';
+	{% endif %}
 
 
-//Use jquery for toggling 
+{% endif %}
+
+document.getElementById("retailers_placeholder").innerHTML=output;
+
+{% if settings.store_locator_use_selectBox == "dropdown" %}
+
+	{% if settings.store_locator_show_Overseas %}
+		var physicalNonUS = $( '.domchange-outsider' );
+		var physicalNonUSPlacehold = $( '#nonUSphysical');
+		var physicalNonUSRemoved = $('.removeFromDom');
+		
+		{% if settings.store_locator_aggreagate_Overseas %}
+			physicalNonUS.detach();
+			physicalNonUSPlacehold.append( physicalNonUS );
+		{% endif %}
+			physicalNonUSRemoved.remove();
+	{% endif %}
+
+	
+
+	//Use jquery for toggling 
+	$(document).ready(function() {InitSorter();});
+	var InitSorter = function(){
+		var sortElement = $('#sort-by');
+		sortElement
+			.val($('#default-collection-sortby').val())
+			.bind('change', function() {
+				var closeBtn = ($(this).attr('data-collapse') == 'false') ? true : false;
+				var collapseEl = '#'+$(this).val();
+				var collapseItem = $(collapseEl);
+				//Open Accordion
+				var toggleCollapse = function(item, type) {
+					if(type == 'close')	{
+						item
+							.removeClass('open')
+							.height(0);
+					} 
+					else {
+            			item
+              				.height(item.find('.collapse-wrap').height())
+              				.addClass('open');
+          			}      
+        		};
+	        	//Toggle View
+        		if(collapseItem.is('.open')) {
+          			var itemToClose = collapseItem;
+          			if(itemToClose)toggleCollapse(itemToClose, 'close');
+        		} 
+        		else {
+          			if(collapseItem.parents().find('.open').length){
+            			toggleCollapse($('.collapse-item.open'), 'close');
+            			setTimeout(function(){
+              				toggleCollapse(collapseItem, 'open');
+            			}, 350);
+          			} 
+          			else {
+            			toggleCollapse(collapseItem, 'open');
+          			}
+        		}
+  			});
+			sortElement.addClass('hidden');
+			var selectBox = new SelectBox({
+    			selectbox:sortElement,
+    			changeCallback:function(value){
+      				sortElement.trigger('change');
+    			}
+  			});
+		};
+
+
+{% elsif settings.store_locator_use_selectBox == "links" %}
+	$(document).ready(function() {
+		$('a[data-collapse]').on('click', function(){
+        	var btn = $(this),
+        	togglers = $('a.togglers'),
+            closeBtn = (btn.attr('data-collapse') == 'false') ? true : false;
+            collapseEl = btn.attr('data-collapse-el'),
+            collapseItem = $(collapseEl);
+	        //Open Accordion
+        	var toggleCollapse = function(item, type){
+          		if(type == 'close'){
+            		item
+              			.removeClass('open')
+              			.height(0);
+		        		//console.log('closing');
+          		} 
+          		else {
+            		item
+              		.height(item.find('.collapse-wrap').height())
+              		.addClass('open');
+        			//console.log('opening');
+		        }      
+        	};
+        	//Toggle View
+        	if(collapseItem.is('.open') || closeBtn){
+        		var itemToClose = (closeBtn) ? $(btn.attr('data-collapse-section')).find('.collapse-item.open') : collapseItem;
+          		if(itemToClose)toggleCollapse(itemToClose, 'close');
+        	}
+        	else {
+          		if(collapseItem.parents().find('.open').length){
+          		//console.log('different panel opening');
+          		togglers.removeClass('active');
+        		btn.addClass('active');
+        		//btn.attr('data-collapse', 'true');
+            	toggleCollapse($('.collapse-item.open'), 'close');
+            	setTimeout(function(){
+              		toggleCollapse(collapseItem, 'open');
+            	}, 350);
+          		}
+          		else {
+            		toggleCollapse(collapseItem, 'open');
+             		//console.log('already open else');
+             		//btn.attr('data-collapse', 'false');
+             		togglers.removeClass('active');
+        	 		btn.addClass('active');
+		        }
+        	}
+      	});
+	});
+{% else %}
+
+
+var physicalNonUS = $( '.domchange-outsider' );
+
+{% if settings.store_locator_show_Overseas %}
+	var physicalNonUSPlacehold = $( '#nonUSphysical');
+	physicalNonUS.detach();
+	physicalNonUSPlacehold.append( physicalNonUS );
+{% else %}
+	physicalNonUS.remove();
+{% endif %}
+
+var nonPhysicalHead = $('#onlinewrapped');
+var nonPhysical = $( '.domchange-online' );
+var nonPhysicalPlacehold = $( '#onlineStores');
+{% if settings.store_locator_show_Online %}
+	nonPhysical.addClass('simple-list').detach();
+	nonPhysicalPlacehold.append( nonPhysical );
+{% endif %}
+nonPhysicalHead.remove();
+
 $(document).ready(function() {
-	InitSorter();
+	
+	$('.masonry-ready')
+  	// initialize Masonry
+  	.masonry()
+  	// now okay to use methods
+  	.masonry('reloadItems')
+  	.masonry('bindResize');
+  	
 });
-var InitSorter = function(){
-  
-  var sortElement = $('#sort-by');
-  sortElement
-  .val($('#default-collection-sortby').val())
-  .bind('change', function() {
-    var closeBtn = ($(this).attr('data-collapse') == 'false') ? true : false;
-    var collapseEl = '#'+$(this).val();
-    var collapseItem = $(collapseEl);
-    //Open Accordion
-        var toggleCollapse = function(item, type){
-          if(type == 'close'){
-            item
-              .removeClass('open')
-              .height(0);
-          } else {
-            item
-              .height(item.find('.collapse-wrap').height())
-              .addClass('open');
-          }      
-        };
 
-        //Toggle View
-        if(collapseItem.is('.open')){
-          var itemToClose = collapseItem;
-          if(itemToClose)toggleCollapse(itemToClose, 'close');
-        } else {
-          if(collapseItem.parents().find('.open').length){
-            toggleCollapse($('.collapse-item.open'), 'close');
-            setTimeout(function(){
-              toggleCollapse(collapseItem, 'open');
-            }, 350);
-          } else {
-            toggleCollapse(collapseItem, 'open');
-          }
-        }
-
-   
-  });
-
-  sortElement.addClass('hidden');
-  var selectBox = new SelectBox({
-    selectbox:sortElement,
-    changeCallback:function(value){
-      sortElement.trigger('change');
-    }
-  });
-
-};
+{% endif %}
 </script>

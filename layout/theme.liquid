@@ -1,3 +1,10 @@
 {% if template == 'page.retailers' %}
-	{% include 'retailers' %}
+	{{ 'storeLocator.scss.css' | asset_url | stylesheet_tag }}
+    {% if settings.store_locator_use_selectBox %}
+      {{ 'selectbox.js' | asset_url | script_tag }}
+    {% endif %}
+    {% if settings.store_locator_use_selectBox == "none" %}
+    	{{ 'masonry.pkgd.min.js' | asset_url | script_tag }}
+    {% endif %}
+    {% include 'retailers' %}
 {% endif %}

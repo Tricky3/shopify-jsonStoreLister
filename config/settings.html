@@ -1,13 +1,56 @@
 <fieldset>
   <legend>Store Locator</legend>
+  <span class="note">Configure the looks and feel of your Retailers</span>
   <table>
     <tr>
+      <td colspan="6"><h3 class="heading">Basic Settings</h3></td>
+    </tr>
+
+    <tr>
       <th>
-        <label for="json_file">Upload your JSON file here</label>
+        <label for="store_locator_json_file">Upload your JSON file here</label>
       </th>
       <td>
-        <input type="file" name="retailers_data.json" id="json_file"/>
+        <input type="file" name="retailers_data.json" id="store_locator_json_file"/>
       </td>
     </tr>
+    
+    <tr>
+      <td colspan="6"><h3 class="heading">Menu Building :: <span class="note">Choose between a dropdown menu ,a list of links, or no menu at all</span></h3></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_use_selectBox">Menu Style</label>
+      </th>      
+      <td colspan="6">
+        <select name="store_locator_use_selectBox">
+          <option value="dropdown" selected="selected">Drop-down Style</option>
+          <option value="links">Links-based Style</option>
+          <option value="none">No menu navigation, just show a long list of all the Retailers</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_show_Overseas">Include Retailers Outside the US</label>
+      </th>      
+      <td colspan="6">
+        <input type="checkbox" name="store_locator_show_Overseas" value="1" />
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="6"><h3 class="heading">Drop Down Specifics</h3></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_aggreagate_Overseas">Aggregate Retailers Outside the US in a single drop down option</label>
+      </th>      
+      <td colspan="6">
+        <input type="checkbox" name="store_locator_aggreagate_Overseas" value="1" />
+      </td>
+    </tr>
+
   </table>
+  
 </fieldset>
