@@ -1,51 +1,61 @@
 // STORE LOCATOR
 
-.just_the_name, .name_with_link {
-    font-family: $bfont;
-    padding-bottom: 2px;
-}
-
-.name_with_link a {
-    border-bottom: 1px solid #999;
-    text-decoration: none;
-}
-
-#store-locator .mailchimp-embed-form {
-    display: none;
-}
-
-.page-textile {
-    margin: 0 48px;
-}
-
-#storelocating h1{
-  text-align:center;
-  margin:0;
-  @include font-size(5.4);
-}
-
-#retailers_placeholder {
-  padding-left:15%;
-  padding-right:5%;
-  h2{
-    text-transform:uppercase;
+// Generic Styling 
+#storelocating{
+  h1{
   }
-  .separator {
-    display: inline-block;
-    white-space: nowrap;
-    vertical-align: top;
-  }
-  .retailers_info {
-    display: inline-block;
-    padding: 0 16px 16px 0;
-    vertical-align: top;
-    width:32%;
+  #retailers_placeholder{
+  {% if settings.store_locator_use_selectBox == "links" %}
+    .menu-items {
+      .menu-item-holder{
+        .findus{
+
+        }
+        ul.separator {
+          display: inline-block;
+          white-space: nowrap;
+          vertical-align: top;
+          width: 100%;
+          li {
+            float: left;
+            text-align: left;
+            .togglers {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+    .linksStyle{
+      .collapse-item{
+        .collapse-wrap{
+          .collapse-content{
+            .statehead{
+              h2.thestate{
+
+              }
+            }
+            .retailers_info{
+              display: inline-block;
+              vertical-align: top;
+              ul{
+                li{
+                  .just_the_name{
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  {% endif %}
   }
 }
 
 
-
-/*Collapsable Items*/
+/*Collapsible Items*/
 .collapse-item{ height:0px; position:relative; overflow:hidden; display:block; clear:both; width:100%;}
 .collapse-wrap{ display:block; width:100%;}
 .collapse-content { font-size: 13px;opacity: 0; padding: 22px 0;}
@@ -66,3 +76,5 @@
 }
 
 .collapse-item.open { height:auto;}
+
+/*theme specific*/
