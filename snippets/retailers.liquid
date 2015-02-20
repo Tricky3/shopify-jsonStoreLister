@@ -521,7 +521,7 @@ for (var x=0;  x < statesTotal; x++) {
 	}
 }
 
-console.log(overseasArr);
+//console.log(overseasArr);
 //calculate the number of outerloops for the USA
 var usStatesTotal = usArr.length;
 //the number we want to group at
@@ -710,6 +710,7 @@ for (var x=0;  x < statesTotal; x++) {
 	replaceState(state);
 
 	if ((outsideUS === true) && (physicalStore === true) && (featured === false)) {
+		var theheading = retailersByState[0]["Country"];
 		var domChange = "domchange-outsider"; 
 		{% if settings.store_locator_use_selectBox == "dropdown" %}
 			{% if settings.store_locator_aggreagate_Overseas %}
@@ -720,13 +721,16 @@ for (var x=0;  x < statesTotal; x++) {
 		{% endif %}
 	}
 	else if ((outsideUS === false) && (physicalStore === true) && (featured === false) ) {
+		var theheading = stateLiteral;
 		var domChange = "no-domchange";var domRemoval = " ";
 	}
 	else{
 		if (featured === false){
+			var theheading = retailersByState[0]["Country"];
 			var domChange = "onlinewrapped";var domRemoval = " ";
 		}
 		else{
+			var theheading = retailersByState[0]["Country"];
 			var domChange = "featuredwrapped";var domRemoval = " ";
 		}
 	}
@@ -757,7 +761,7 @@ for (var x=0;  x < statesTotal; x++) {
 		output+= '<div class="no-collapse"><div class="no-collapse-content">';
 	{% endif %}
   	
-	output+= '<div class="statehead"><h2 class="thestate">'+stateLiteral+'</h2></div>';
+	output+= '<div class="statehead"><h2 class="thestate">'+theheading+'</h2></div>';
 	for (var i=0,  tot=retailersByState.length; i < tot; i++) {
     	//console.log("PAIR " + i + ": " + retailersByState[i].Name);
     	var name 		= retailersByState[i]["Name"];
@@ -779,7 +783,7 @@ for (var x=0;  x < statesTotal; x++) {
 			var thestate = retailersByState[i]["Province/State"]; var whereIntheWorld = "overseas"; var retailClass="retailers_info";
 		} 
 		else if ((outsideUS === false) && (physicalStore === true) && (featured === false)) {
-			var thestate = country; var whereIntheWorld = "usa"; var retailClass="retailers_info";
+			var thestate = retailersByState[i]["Province/State"]; var whereIntheWorld = "usa"; var retailClass="retailers_info";
 		}
 		else { 
 			if (featured === false){
