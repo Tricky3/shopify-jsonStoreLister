@@ -5,7 +5,6 @@
     <tr>
       <td colspan="6"><h3 class="heading">Basic Settings</h3></td>
     </tr>
-
     <tr>
       <th>
         <label for="store_locator_json_file">Upload your JSON file here</label>
@@ -14,7 +13,6 @@
         <input type="file" name="retailers_data.json" id="store_locator_json_file"/>
       </td>
     </tr>
-    
     <tr>
       <td colspan="6"><h3 class="heading">Menu Building :: <span class="note">Choose between a dropdown menu ,a list of links, or no menu at all</span></h3></td>
     </tr>
@@ -49,12 +47,24 @@
     <tr>
       <th>
         <label for="store_locator_show_Special">Show Special Retailers</label>
-      </th>      
+      </th> 
+     <td colspan="6">
+       <input type="checkbox" name="store_locator_show_Special" value="1" />
+      </td>
+      <th>
+        <label for="store_locator_aggregate_Special">Aggegate Special Retailers by Name</label>
+      </th> 
       <td colspan="6">
-        <input type="checkbox" name="store_locator_show_Special" value="1" />
+        <input type="checkbox" name="store_locator_aggregate_Special" value="1" />
       </td>
     </tr>
-
+    <tr>
+      <th>
+        <label for="store_locator_special_explanatory">What's so special about your special Retailers? </label>
+        <small>Give your visitor an explanatory text</small>
+      </th>
+      <td colspan="6"><textarea class="ssb is-expanded" name="store_locator_special_explanatory" cols="1" rows="30" id="store_locator_special_explanatory" value="" /></td>
+    </tr>
     <tr>
       <td colspan="6"><h3 class="heading">Drop Down Style :: Settings <span class="note">Valid only when the "Drop Down Style" has been selected for the Menu</span></h3></td>
     </tr>
@@ -66,16 +76,20 @@
         <input type="checkbox" name="store_locator_aggreagate_Overseas" value="1" />
       </td>
     </tr>
-
     <tr>
-      <td colspan="6"><h3 class="heading">Links-based Style :: Settings <span class="note">Valid only when the "Links-based Style" has been selected for the Menu</span></h3></td>
+      <td colspan="6"><h3 class="heading">No Menu Navigation Style :: Settings <span class="note">Valid only when the "No Menu Navigation Style" has been selected for the Menu</span></h3></td>
     </tr>
+    
     <tr>
-      <th>
-        <label for="store_locator_links_per_row">Number of Links in a single row</label>
-      </th>
-      <td>
-        <input type="text" id="store_locator_links_per_row" name="store_locator_links_per_row" value="4" />
+      <td colspan="6">
+      <p><b>FitColumns:</b> Items are arranged into columns. Columns progress horizontally.</p>
+      <p><b>Masonry:</b> Masonry works by placing elements in optimal position based on available vertical space</p>
+      </td>    
+      <td colspan="6">
+        <select name="store_locator_order">
+          <option value="masonry" selected="selected">Masonry </option>
+          <option value="fitColumns">FitColumns</option>
+        </select>
       </td>
     </tr>
   </table>
