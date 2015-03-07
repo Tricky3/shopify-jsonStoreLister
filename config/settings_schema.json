@@ -1,0 +1,88 @@
+  {
+    "name": "Store Locator",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Configure the looks and feel of your Retailers"
+      },
+      {
+        "type": "header",
+        "content": "Menu Building :: Choose between a dropdown menu ,a list of links, or no menu at all"
+      },
+      {
+        "type": "select",
+        "id": "store_locator_use_selectBox",
+        "label": "Menu Style",
+        "options": [
+          {
+            "value": "dropdown",
+            "label": "Drop-down Style"
+          },
+          {
+            "value": "links",
+            "label": "Links-based Style"
+          },
+          {
+            "value": "none",
+            "label": "No menu navigation, just show a long list of all the Retailers"
+          }
+        ],
+        "default": "dropdown"
+      },
+      {
+        "type": "checkbox",
+        "id": "store_locator_show_Overseas",
+        "label": "Include Retailers Outside the US"
+      },
+      {
+        "type": "checkbox",
+        "id": "store_locator_show_Online",
+        "label": "Include Online Retailers"
+      },
+      {
+        "type": "checkbox",
+        "id": "store_locator_show_Special",
+        "label": "Show Special Retailers"
+      },
+      {
+        "type": "checkbox",
+        "id": "store_locator_aggregate_Special",
+        "label": "Aggegate Special Retailers by Name"
+      },
+      {
+        "type": "textarea",
+        "id": "store_locator_special_explanatory",
+        "label": "What's so special about your special Retailers?",
+        "info": "Give your visitor an explanatory text"
+      },
+      {
+        "type": "header",
+        "content": "Drop Down Style :: Settings Valid only when the \"Drop Down Style\" has been selected for the Menu"
+      },
+      {
+        "type": "checkbox",
+        "id": "store_locator_aggreagate_Overseas",
+        "label": "Aggregate Retailers Outside the US in a single drop down option"
+      },
+      {
+        "type": "header",
+        "content": "No Menu Navigation Style :: Settings Valid only when the \"No Menu Navigation Style\" has been selected for the Menu"
+      },
+      {
+        "type": "select",
+        "id": "store_locator_order",
+        "label": "FitColumns: Items are arranged into columns. Columns progress horizontally. Masonry: Masonry works by placing elements in optimal position based on available vertical space",
+        "options": [
+          {
+            "value": "masonry",
+            "label": "Masonry"
+          },
+          {
+            "value": "fitColumns",
+            "label": "FitColumns"
+          }
+        ],
+        "default": "masonry"
+      }
+    ]
+  }
