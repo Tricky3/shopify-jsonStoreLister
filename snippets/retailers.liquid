@@ -1266,7 +1266,15 @@ $(document).ready(function() {
 		{% if settings.store_locator_order == "masonry" %}
 		gutterwidth=20;
 		{% else %}
-		gutterwidth=0;
+		
+			{% unless settings.store_locator_use_selectBox == "none" %}
+			gutterwidth=20;
+			{% endunless %}
+			
+			{% if settings.store_locator_use_selectBox == "none" %}
+			gutterwidth=0;
+			{% endif %}
+
 		{% endif %}
 
 		if ($w < 422) {
@@ -1292,7 +1300,13 @@ $(document).ready(function() {
 		console.log('width '+$w);
 		console.log('columnNum '+columnNum);
 		console.log('columnWidth '+columnWidth);
+
+		
+
+
+
 		{% if settings.store_locator_order == "masonry" %}
+		
 		$('.commonuse').find('.simple-list').each(function() {
 			var $item = $(this),
 				multiplier_w = $item.attr('class').match(/simple-list(\d)/),
@@ -1304,14 +1318,41 @@ $(document).ready(function() {
 				//height: height
 			});
 		});
+
+		{% else %}
+
+		{% unless settings.store_locator_use_selectBox == "none" %}
+
+		$('.commonuse').find('.simple-list').each(function() {
+			var $item = $(this),
+				multiplier_w = $item.attr('class').match(/simple-list(\d)/),
+				//multiplier_h = $item.attr('class').match(/simple-list(\d)/),
+				width = multiplier_w ? columnWidth*multiplier_w[1]-20 : columnWidth;//,
+				//height = multiplier_h ? columnWidth*multiplier_h[1]*0.45-20 : columnWidth*0.45-20;
+			$item.css({
+				width: width,
+				//height: height
+			});
+		});
+
+
+
+		{% endunless %}
+		
+
 		{% endif %}
+
+
+
 		return columnWidth;
 	};
 
 	//Work for normal masonry
+
+	
+
 	{% if settings.store_locator_order == "masonry" %}
-
-
+  		
   		isotope = function () {
   			console.log('isotope as masonry is running');
 			$container.isotope({
@@ -1330,9 +1371,7 @@ $(document).ready(function() {
 				}
 			});
 		};
-
-
-
+	
 	{% else %}
 
 		function processAutoheight(parent,children,positiveFluctuation,negativeFluctuation) {
@@ -1505,13 +1544,25 @@ $(document).ready(function() {
 			//console.log('isotope fitColumns is running');
 			$container.isotope({
 				isResizeBound: false,
-				itemSelector: '.simple-list',
 				isFitWidth: false,
+				{% unless settings.store_locator_use_selectBox == "none" %}
+				itemSelector: '.retailers_info',
+				masonry: {
+					columnWidth: colWidth(),
+					gutter: gutterwidth
+				}
+				{% endunless %}
+				{% if settings.store_locator_use_selectBox == "none" %}
+				itemSelector: '.simple-list',
 				layoutMode: 'fitColumns',
+				{% endif %}
+
 			});
 		};
 
+		{% if settings.store_locator_use_selectBox == "none" %}
 		doYourMath();
+		{% endif %}
 
 	{% endif %}
 
@@ -1522,7 +1573,9 @@ $(document).ready(function() {
 var myEfficientFn = debounce(function() {
 		//console.log( 'Resize running!===============================');		
 		{% if settings.store_locator_order == "fitColumns" %}
-		doYourMath();
+			{% if settings.store_locator_use_selectBox == "none" %}
+				doYourMath();
+			{% endif %}
 		{% endif %}
     	isotope();
 	}, 250);
