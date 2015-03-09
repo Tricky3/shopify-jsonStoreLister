@@ -1277,22 +1277,20 @@ $(document).ready(function() {
 
 		{% endif %}
 
-		if ($w < 422) {
-            columnNum  = 1;
-            //console.log("container width is less than 422");
-
+		if ($w < {{settings.store_locator_breakpoint_3}}) {
+            columnNum  = {{settings.store_locator_columnNum_4}};
         }
-		else if ($w <= 767) {
-            //console.log("container width is less than 768 but greater than or equal to 423");
-            columnNum  = 2;
+		else if ($w <= {{settings.store_locator_breakpoint_2}}) {
+            //console.log("container width is less than or equal to breakpoint_2 but greater than breakpoint_3");
+            columnNum  = {{settings.store_locator_columnNum_3}};
         }
-        else if ($w <= 1164) {
-            //console.log("container width is less than 1164 but greater than or equal to 768");
-            columnNum  = 3;
+        else if ($w <= {{settings.store_locator_breakpoint_1}}) {
+            //console.log("container width is less than or equal to breakpoint_1 but greater than breakpoint_2");
+            columnNum  = {{settings.store_locator_columnNum_2}};
         }
-        else if ($w >= 1164) {
-            //console.log("container width is greater than or equal to 1164");
-            columnNum  = 4;
+        else if ($w > {{settings.store_locator_breakpoint_1}}) {
+            //console.log("container width is greater than to breakpoint_1");
+            columnNum  = {{settings.store_locator_columnNum_1}};
         }
 
 		$w -= gutterwidth*(columnNum-1);

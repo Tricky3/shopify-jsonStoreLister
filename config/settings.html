@@ -62,6 +62,92 @@
       </th>
       <td colspan="6"><textarea class="ssb is-expanded" name="store_locator_special_explanatory" cols="1" rows="30" id="store_locator_special_explanatory" value="" /></td>
     </tr>
+     <tr>
+      <td colspan="6"><h3 class="heading">Breakpoints &amp; Columns :: <span class="note">Configure your layout</span></h3></td>
+    </tr>
+     <tr>
+      <th>
+        <label for="store_locator_breakpoint_1">Breakpoint 1 (bigger screens)  </label>
+      </th>
+      <td>
+        <input type="text" id="store_locator_breakpoint_1" name="store_locator_breakpoint_1" value="1164" />
+      </td>
+    </tr>
+     <tr>
+      <th>
+        <label for="store_locator_breakpoint_2">Breakpoint 2 (tablet screens)  </label>
+      </th>
+      <td>
+        <input type="text" id="store_locator_breakpoint_2" name="store_locator_breakpoint_2" value="767" />
+      </td>
+    </tr>
+     <tr>
+      <th>
+        <label for="store_locator_breakpoint_3">Breakpoint 3 (mobile screens)  </label>
+      </th>
+      <td>
+        <input type="text" id="store_locator_breakpoint_3" name="store_locator_breakpoint_3" value="422" />
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_columnNum_1">Columns for bigger screens  </label>
+        <span>Valid when container width is greater than Breakpoint #1 (Container &gt; Breakpoint #1)</span>
+      </th>
+      <td>
+        <select name="store_locator_columnNum_1">
+          <option value="4" selected="selected">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_columnNum_2">Columns for Large screens  </label>
+        <span>Valid when container width is less than or equal to Breakpoint #1 but greater than Breakpoint #2 (Breakpoint #1 &gt;= Number of Columns &gt; Breakpoint #2)
+        </span>
+      </th>
+      <td>
+        <select name="store_locator_columnNum_2">
+          <option value="4">4</option>
+          <option value="3" selected="selected">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_columnNum_3">Columns for Medium-width screens  </label>
+        <span>Valid when container width is less than or equal to Breakpoint #2 but greater than Breakpoint #3 (Breakpoint #2 &gt;= Number of Columns &gt; Breakpoint #3)
+        </span>
+      </th>
+      <td>
+        <select name="store_locator_columnNum_3">
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2" selected="selected">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="store_locator_columnNum_4">Columns for Mobile screens  </label>
+        <span>Valid when container width is less than Breakpoint #3 (Number of Columns &lt; Breakpoint #3)
+        </span>
+      </th>
+      <td>
+        <select name="store_locator_columnNum_4">
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1" selected="selected">1</option>
+        </select>
+      </td>
+    </tr>
     <tr>
       <td colspan="6"><h3 class="heading">No Menu Navigation Style :: Settings <span class="note">Valid only when the "No Menu Navigation Style" has been selected for the Menu</span></h3></td>
     </tr>
