@@ -1,4 +1,4 @@
-  {
+{
     "name": "Store Locator",
     "settings": [
       {
@@ -36,6 +36,11 @@
       },
       {
         "type": "checkbox",
+        "id": "store_locator_aggreagate_Overseas",
+        "label": "Aggregate Retailers Outside the US"
+      },
+      {
+        "type": "checkbox",
         "id": "store_locator_show_Online",
         "label": "Include Online Retailers"
       },
@@ -54,15 +59,6 @@
         "id": "store_locator_special_explanatory",
         "label": "What's so special about your special Retailers?",
         "info": "Give your visitor an explanatory text"
-      },
-      {
-        "type": "header",
-        "content": "Drop Down Style :: Settings Valid only when the \"Drop Down Style\" has been selected for the Menu"
-      },
-      {
-        "type": "checkbox",
-        "id": "store_locator_aggreagate_Overseas",
-        "label": "Aggregate Retailers Outside the US in a single drop down option"
       },
       {
         "type": "header",
