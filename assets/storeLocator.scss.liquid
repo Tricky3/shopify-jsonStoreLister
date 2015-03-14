@@ -178,6 +178,8 @@
 
 // Generic Styling 
 #storelocating{
+  .inner{margin:0;}
+  .no-collapse {display: inline-block;}
   h1{
   }
   h3.thestate {
@@ -186,6 +188,7 @@
   ul {
     list-style: outside none none;
     margin: 0;
+    display: inline-block;
   }
   #retailers_placeholder{
   {% unless settings.store_locator_use_selectBox == "none" %}

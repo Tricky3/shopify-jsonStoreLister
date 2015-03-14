@@ -507,7 +507,7 @@
     "Website": "http:\/\/bhldn.com"
   },
   {
-    "Name": "BHLDN",
+    "Name": "BHLDN ",
     "Address": "8 East Walton Street",
     "Address 2": " ",
     "City": "Chicago, IL",
@@ -546,7 +546,7 @@
     "Website": "http:\/\/bhldn.com"
   },
   {
-    "Name": "BHLDN at Anthropologie",
+    "Name": "BHLDN at Anthropologie ",
     "Address": "1509 Fifth Ave ",
     "Address 2": "",
     "City": "Seattle, WA",
@@ -1895,6 +1895,19 @@
     "Fax": "",
     "Email": "",
     "Website": "http:\/\/www.frocks.ca"
+  },
+  {
+    "Name": "Stoffen Janssens",
+    "Address": "KORENLEI 5",
+    "Address 2": "",
+    "City": "Gent",
+    "Province\/State": "",
+    "Country": "BELGIUM",
+    "Postal\/Zip Code": 9000,
+    "Phone": "+32(0)9 233 94 45",
+    "Fax": "",
+    "Email": "",
+    "Website": "http:\/\/www.kollektie-eva.be\/"
   },
   {
     "Name": "Novelle",

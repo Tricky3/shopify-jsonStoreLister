@@ -469,8 +469,6 @@ function replaceCountry(countryString) {
     		}
 }
 
-
-
 //create a sorter that can work with JS objects
 var sortByProperty = function(prop) {
     return function(a,b) {
@@ -520,6 +518,21 @@ var countriesTotal = uniqueCountries.length;
 			var address 	= specialRetailers[i]["Address"];
 			var address2 	= specialRetailers[i]["Address 2"];
 			var city 		= specialRetailers[i]["City"];
+
+			//console.log(name+' city is '+city);
+			var splitStateArray = [];
+			splitStateArray = specialRetailers[i]["City"].split(',');
+			
+			if (splitStateArray.length>1){
+				splitState 	= specialRetailers[i]["City"].split(',')[1].trim();
+			}
+			else{
+				splitState = "ZZ";
+			}
+
+
+			//console.log('statesplit is '+splitState);
+	
 			//var thestate	= specialRetailers[i]["Province/State"];
 			var country 	= specialRetailers[i]["Country"];
 			var zip 		= specialRetailers[i]["Postal/Zip Code"];
@@ -538,6 +551,7 @@ var countriesTotal = uniqueCountries.length;
 				'Address':address,
 				'Address 2':address2,
 				'City':city,
+				'splitState':splitState,
 				'Province/State':'Special',
 				'Country':country,
 				'Postal/Zip Code':zip,
@@ -552,6 +566,7 @@ var countriesTotal = uniqueCountries.length;
 		}
 		//clear out the duplicate ones, and sort alphabetically
 		var uniqueSpecials = cleanArray(splitSpecialRetailersArr.filter( onlyUnique )).sort();
+		//console.log(specialRetailersResultArr);
 		//cache the length
 		var uniqueSpecialsTotal = uniqueSpecials.length;
 	{% endif %}
@@ -711,7 +726,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		output+= '<div class="float-mason">';
 		{% if settings.store_locator_aggreagate_Overseas %}
     		output+= '<ul class="separator">';
-			output+= '<li class="retailers_info linked" id="intenationalHolder"><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#international" data-id="international">All Non-US Stores</a></li>';
+			output+= '<li class="retailers_info linked" id="intenationalHolder"><a class="togglers" id="state-non-us" data-collapse="true" data-collapse-el="#international" data-id="international">All Non-US Stores</a></li>';
     		output+= '</ul>';
     	{% else %}
 			outerloop:
@@ -752,7 +767,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		output+= '<h3 class="findus in-online">Special Retailers</h3>';
 		output+= '<div class="float-mason">';
 		output+= '<ul class="separator" style = "width:100%;">';
-		output+= '<li class="retailers_info linked" id="specialStateHolder"><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#special" data-id="special">Show our Special Retailers</a></li>';
+		output+= '<li class="retailers_info linked" id="specialStateHolder"><a class="togglers" id="state-featured" data-collapse="true" data-collapse-el="#special" data-id="special">Show our Special Retailers</a></li>';
 		output+= '</ul>';
 		output+= '</div></div>';
 	{% endif %}
@@ -763,7 +778,11 @@ output+= '</div>';
 output+= '</div></div></div>';
 
 {% else %}
-	articleClass = "commonuse nomenuStyle";
+{% if settings.store_locator_order == "fitColumns" %}
+	articleClass = "commonuse nomenuStyle ftclmn";
+	{% else %}
+	articleClass = "commonuse nomenuStyle msnr";
+	{% endif %}
 {% endif %}
 
 //===========================================================================================================================================================
@@ -830,7 +849,12 @@ for (var x=0;  x < statesTotal; x++) {
 		{% endif %}
   	
 		output+= '<div class="statehead"><h3 class="thestate">'+theheading+'</h3></div>';
+		{% if settings.store_locator_use_selectBox == "none" %}
+		output+= '<div class="listing-content">';
+		{% else %}
 		output+= '<div class="float-mason">';
+		{% endif %}
+		
 		for (var i=0,  tot=retailersByState.length; i < tot; i++) {
     		var name 		= retailersByState[i]["Name"];
 			var address 	= retailersByState[i]["Address"];
@@ -929,8 +953,13 @@ output+= '</div>';
 			output+= '<div class="no-collapse"><div class="no-collapse-content">';
 		{% endif %}
 
+		
 		output+= '<div class="statehead"><h3 class="thestate">'+theheading+'</h3></div>';
+		{% if settings.store_locator_use_selectBox == "none" %}
+		output+= '<div class="listing-content">';
+		{% else %}
 		output+= '<div class="float-mason">';
+		{% endif %}
 		for (var i=0,  tot=retailersByCountry.length; i < tot; i++) {
     		var name 		= retailersByCountry[i]["Name"];
 			var address 	= retailersByCountry[i]["Address"];
@@ -963,16 +992,20 @@ output+= '</div>';
 		}
 		output+= '</div>';
 
-		{% unless settings.store_locator_aggreagate_Overseas %}
+		{% unless settings.store_locator_use_selectBox == "none" %}
 			{% if settings.store_locator_aggreagate_Overseas %}
 			{% else %}
 				output+= '</div></div></div>';
 			{% endif %}
 		{% endunless %}
-	
+
 		{% if settings.store_locator_use_selectBox == "none" %}
 			output+= '</div></div></div>';
 		{% endif %}
+		
+				
+		
+		
 	}
 	
 	
@@ -1042,7 +1075,7 @@ output+= '</div>';
 				//get all the objects that contain those unique splitNames
 				var specialRetailersBySplitName = getObjects(specialRetailersResultArr,'splitName',thesplitName);
 				//sort the Objects
-				specialRetailersBySplitName.sort(sortByProperty("Name"));
+				specialRetailersBySplitName.sort(sortByProperty("splitState"));
 				//console.log(specialRetailersBySplitName);
 				var theheading = specialRetailersBySplitName[0]["splitName"];
 				var theheadingSanitized = specialRetailersBySplitName[0]["splitName"].toLowerCase().replace(/\s+/g, '');
@@ -1066,14 +1099,16 @@ output+= '</div>';
 	
 					output+= '<div class="simple-list '+domChange+' times-'+tot+' retailers_info '+thestate+'" data-country="'+theheadingSanitized+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
 			
+					/*
 					if (website !=="") {
 						output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
 					} 	else {
 						output+='<li itemprop="url" class="just_the_name">' + name + '</li>';
 					}
+					*/
 					if (address !=="")  {output+='<li itemprop="street-address">' + address + '</li>';}
 					if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
-					if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="region">' + thestate +' </span><span itemprop="postal-code">'+ zip + '</span></li>';}
+					if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="postal-code">'+ zip + '</span></li>';}
 					if (phone !=="") 	{output+='<li itemprop="tel">' +phone + '</li>';}
 					//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
 					output+='</ul></div>';
@@ -1125,6 +1160,10 @@ function debounce(func, wait, immediate) {
 {% if settings.store_locator_use_selectBox == "dropdown" %}
 	//Use jquery for toggling 
 	$(document).ready(function() {InitSorter();});
+
+
+	
+
 	var InitSorter = function(){
 		var sortElement = $('#sort-by');
 		sortElement
@@ -1249,333 +1288,218 @@ var featuredPlacehold = $( '#specialStores');
 {% endif %}
 
 
-$(document).ready(function() {
-	
-	var $container, $w, columnNum=1;
-  	$container = $('.float-mason');
-  	
-  	/*  Mobile:=========================   <=320                                                    ==============================
-    Tablet:=========================   >320 & <=768                                             ==============================
-    Small Desktop:==================   >768 & <=1024  (the overall Grid for the static Pages)   ==============================
-    Desktop:========================   >1024  & <=1382 ( the overall Page Width designed)       ==============================
-	*/
 
-  	colWidth = function () {
-		$w = $('.commonuse').width(), 
-		columnWidth = 0,
-		{% if settings.store_locator_order == "masonry" %}
-		gutterwidth=20;
-		{% else %}
+
+var SpaceCalc = {
+	$w:0, 
+	columnNum:1,
+	columnNum : 0,
+	columnWidth : 0,
+	{% if settings.store_locator_order == "masonry" %}
+	gutterwidth : 20,
+	{% else %}
+		{% unless settings.store_locator_use_selectBox == "none" %}
+			gutterwidth : 20,
+		{% endunless %}
+		{% if settings.store_locator_use_selectBox == "none" %}
+			gutterwidth : 0,
+		{% endif %}
+	{% endif %}
+ 		
+   	colWidth : function () {
+   		var margT = 0;
+		$w = $('.commonuse').width(); 
 		
+		if ($w < {{settings.store_locator_breakpoint_3}}) {
+       	    columnNum  = {{settings.store_locator_columnNum_4}};
+       	}
+       	//less than or equal to breakpoint_2 but greater than breakpoint_3
+		else if ($w <= {{settings.store_locator_breakpoint_2}}) {
+       	    columnNum  = {{settings.store_locator_columnNum_3}};
+       	}
+       	//less than or equal to breakpoint_1 but greater than breakpoint_2
+       	else if ($w <= {{settings.store_locator_breakpoint_1}}) {
+       	    columnNum  = {{settings.store_locator_columnNum_2}};
+       	}
+       	//greater than to breakpoint_1
+        else if ($w > {{settings.store_locator_breakpoint_1}}) {
+        	columnNum  = {{settings.store_locator_columnNum_1}};
+        }
+
+		$w -= SpaceCalc.gutterwidth*(columnNum-1);
+		columnWidth = Math.floor($w/columnNum);
+		marg = $(".simple-list:first").outerWidth(true) - $(".simple-list:first").outerWidth();
+		console.log('margin is '+marg);
+	
+		$('.commonuse').find('.simple-list').each(function() {
+			var $item = $(this);
+			$item.css({width: columnWidth-marg});
+		});
+		return columnWidth;
+	},
+		
+	{% if settings.store_locator_order == "masonry" %}
+  	isotope : function () {
+  		$container = $('.float-mason');
+		$container.isotope({
+			isResizeBound: false,
+			isFitWidth: false,
 			{% unless settings.store_locator_use_selectBox == "none" %}
-			gutterwidth=20;
+			itemSelector: '.retailers_info',
 			{% endunless %}
-			
 			{% if settings.store_locator_use_selectBox == "none" %}
-			gutterwidth=0;
+			itemSelector: '.simple-list',
 			{% endif %}
 
-		{% endif %}
-
-		if ($w < {{settings.store_locator_breakpoint_3}}) {
-            columnNum  = {{settings.store_locator_columnNum_4}};
-        }
-		else if ($w <= {{settings.store_locator_breakpoint_2}}) {
-            //console.log("container width is less than or equal to breakpoint_2 but greater than breakpoint_3");
-            columnNum  = {{settings.store_locator_columnNum_3}};
-        }
-        else if ($w <= {{settings.store_locator_breakpoint_1}}) {
-            //console.log("container width is less than or equal to breakpoint_1 but greater than breakpoint_2");
-            columnNum  = {{settings.store_locator_columnNum_2}};
-        }
-        else if ($w > {{settings.store_locator_breakpoint_1}}) {
-            //console.log("container width is greater than to breakpoint_1");
-            columnNum  = {{settings.store_locator_columnNum_1}};
-        }
-
-		$w -= gutterwidth*(columnNum-1);
-		columnWidth = Math.floor($w/columnNum);
-		console.log('width '+$w);
-		console.log('columnNum '+columnNum);
-		console.log('columnWidth '+columnWidth);
-
-		
-
-
-
-		{% if settings.store_locator_order == "masonry" %}
-		
-		$('.commonuse').find('.simple-list').each(function() {
-			var $item = $(this),
-				multiplier_w = $item.attr('class').match(/simple-list(\d)/),
-				//multiplier_h = $item.attr('class').match(/simple-list(\d)/),
-				width = multiplier_w ? columnWidth*multiplier_w[1]-20 : columnWidth;//,
-				//height = multiplier_h ? columnWidth*multiplier_h[1]*0.45-20 : columnWidth*0.45-20;
-			$item.css({
-				width: width,
-				//height: height
-			});
+			masonry: {
+				columnWidth: SpaceCalc.colWidth(),
+				gutter: SpaceCalc.gutterwidth
+			}
 		});
-
-		{% else %}
-
-		{% unless settings.store_locator_use_selectBox == "none" %}
-
-		$('.commonuse').find('.simple-list').each(function() {
-			var $item = $(this),
-				multiplier_w = $item.attr('class').match(/simple-list(\d)/),
-				//multiplier_h = $item.attr('class').match(/simple-list(\d)/),
-				width = multiplier_w ? columnWidth*multiplier_w[1]-20 : columnWidth;//,
-				//height = multiplier_h ? columnWidth*multiplier_h[1]*0.45-20 : columnWidth*0.45-20;
-			$item.css({
-				width: width,
-				//height: height
-			});
-		});
-
-
-
-		{% endunless %}
-		
-
-		{% endif %}
-
-
-
-		return columnWidth;
-	};
-
-	//Work for normal masonry
-
-	
-
-	{% if settings.store_locator_order == "masonry" %}
-  		
-  		isotope = function () {
-  			console.log('isotope as masonry is running');
-			$container.isotope({
-				isResizeBound: false,
-				isFitWidth: false,
-				{% unless settings.store_locator_use_selectBox == "none" %}
-				itemSelector: '.retailers_info',
-				{% endunless %}
-				{% if settings.store_locator_use_selectBox == "none" %}
-				itemSelector: '.simple-list',
-				{% endif %}
-
-				masonry: {
-					columnWidth: colWidth(),
-					gutter: gutterwidth
-				}
-			});
-		};
+	},
 	
 	{% else %}
+	processAutoheight: function(parent,children) {
+		var Normalizer = 0,
+    		maxHeight = -1,
+    		minHeight = 10000,
+    		totalHeight = 0;
+    	//parentWidth = $(parent).outerWidth(true);
+		parentWidth = $w;
+    	$(parent).find(children).each(function(){
+        	height = $(this).outerHeight(true);
+        	maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
+        	minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
+        	totalHeight += height;
+    	});
+    	Normalizer =  Math.ceil((totalHeight - (columnNum * maxHeight)) / (columnNum * minHeight));
+        Normalizer = Normalizer < 0 ? Normalizer=0 : Normalizer;
+        averageColumnHeight = Math.ceil(totalHeight/columnNum);
+        assignedColumnHeight = Math.ceil(maxHeight+(Normalizer*minHeight));
+    	//Start Validation Loops
+    	SpaceCalc.verifyAutoHeight(parent,children,totalHeight,maxHeight,minHeight);
+    	},
 
-		function processAutoheight(parent,children,positiveFluctuation,negativeFluctuation) {
-			var Normalizer = 0;
-			var heightverifier = 0;
-			var columnVerifier = 1;
-			var elementCount = 0;
-			var offsetHeight = 0;
-    		var maxHeight = -1;
-    		var minHeight = 10000; //if it's longer than that, then it's probably a sexual issue that we don't really wanna know about... or do we? :p
-    		var totalHeight = 0;
-
-    		parentWidth = $(parent).outerWidth(true); // outerHeight will add padding and margin to height total
-       		//console.log(parent+' width '+parentWidth);
-
-    		$(parent).find(children).each(function(){
-        		height = $(this).outerHeight(true); // outerHeight will add padding and margin to height total
-        		maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
-        		minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
-        		totalHeight += height;
-    		});
-
-
-
-            Normalizer =  Math.ceil((totalHeight - (columnNum * maxHeight)) / (columnNum * minHeight));
-            Normalizer = Normalizer+positiveFluctuation-negativeFluctuation; //Gaussian Distribution
-            Normalizer = Normalizer < 0 ? Normalizer=0 : Normalizer;
-            //console.log('Normalizer '+Normalizer);
-            var assignedColumnHeightAdjust = 0;
-           	var averageColumnHeight = Math.ceil(totalHeight/columnNum);
-            
-            var assignedColumnHeight = Math.ceil(maxHeight+assignedColumnHeightAdjust+(Normalizer*minHeight)); // Normally distributed
-
-            //Make sure that the averageColumnHeight is bigger than the maxheight of a single element
-            if (averageColumnHeight >= maxHeight) {
-            	//console.log ('Parent div: '+parent+' averageColumnHeight '+averageColumnHeight+' is bigger than the infimum of maxHeight '+maxHeight);
-            }
-            else{
-            	//console.log ('Parent div: '+parent+' Algorithm problem, averageColumnHeight : '+averageColumnHeight);
-            }
-            //Make sure that that the assigned Column Height, when multiplied by the number of Columns, does not surpass the Total Height
-             if (assignedColumnHeight*columnNum <= totalHeight) {
-             	//console.log ('Parent div: '+parent+' ====PROBLEM=====:: assignedColumnHeight : '+assignedColumnHeight+', ('+assignedColumnHeight+'*'+columnNum+'='+assignedColumnHeight*columnNum+')but the totalHeight is SMALLER: '+totalHeight);
-             }
-             else{
-             	//console.log ('Parent div: '+parent+' ====ALL OK=====:: assignedColumnHeight : '+assignedColumnHeight+', ('+assignedColumnHeight+'*'+columnNum+'='+assignedColumnHeight*columnNum+')but the totalHeight is LARGER: '+totalHeight);
-             }
-            //console.log('assignedColumnHeight ' +assignedColumnHeight+' < averageColumnHeight '+averageColumnHeight);
-            //Check if the assigned Colum Height manages to reach the Total Height in LESS columns than the expected
-			for (i = 1; i <= columnNum; i++) {
-    			var checkTotalAssignedHeight = assignedColumnHeight*i ;
-    			//console.log(checkTotalAssignedHeight+' ? '+ totalHeight);
-    			if (checkTotalAssignedHeight > totalHeight) {
-    				if (i == columnNum) {
-    					//console.log('but has happened when we have reached the correc number of columns '+columnNum);
-    					//compare the difference to the minimum height of an element 
-    					var diff=checkTotalAssignedHeight-totalHeight;
-    					if (diff<minHeight){
-    						//console.log('Parent div: '+parent+' the difference is LESS than the minimum height('+diff+'px) --> We need to adjust the Assigned Height (was '+assignedColumnHeight+' px)');
-    						assignedColumnHeight += minHeight;
-    						//console.log('INCREASED by '+minHeight+' and now reached '+assignedColumnHeight);
-    					}
-    					else{
-    						//console.log('Parent div: '+parent+' the difference is MORE than the minimum height ('+diff+'px) --> No need to do any adjustments');
-    					}
+    verifyAutoHeight: function(parent,children,totalHeight,maxHeight,minHeight) {
+    	var heightverifier = 0,
+    		columnVerifier = 1,
+    		elementCount = 0,
+			checkTotalAssignedHeight = 0,
+			diff = 0;
+   
+        //Check if the assigned Colum Height manages to reach the Total Height in LESS columns than the expected
+		for (i = 1; i <= columnNum; i++) {
+    		checkTotalAssignedHeight = assignedColumnHeight*i ;
+    		if (checkTotalAssignedHeight > totalHeight) {
+    			if (i == columnNum) {
+    				var diff=checkTotalAssignedHeight-totalHeight;
+    				if (diff<minHeight){
+    					assignedColumnHeight += minHeight;
+    					SpaceCalc.needToRethink(parent,children,totalHeight,maxHeight,minHeight);
     				}
-    				else{
-    					//console.log ('assignedColumnHeight reaches totalHeight in LESS Columns than needed!');
-    					//console.log('Parent div: '+parent+' assignedColumnHeight was '+assignedColumnHeight);
-    					//make sure that the assigned height always stays positive before adjusting
-    					if ((assignedColumnHeight - minHeight <= 0) || assignedColumnHeight - minHeight == minHeight) {
-    						// don't do anything
-    						//console.log('Parent div: '+parent+' needs to stay at '+assignedColumnHeight);
-    					}
-    					else{
-    						assignedColumnHeight -= minHeight;
-    						//console.log('Parent div: '+parent+' decreased by '+minHeight+' and now reached '+assignedColumnHeight);
-    					}
-	   				}
     			}
-			}
-
-			var offsetHeights=[];
-
-            //Check if the assigned Colum Height manages to reach the Total Height in MORE columns than the expected
-            $(parent).find(children).each(function(){
-        		height = $(this).outerHeight(true); // outerHeight will add padding and margin to height total
-        		minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
-
-        		elementCount++;
-        		//======================================== verify the height and use the verification for adjusting ========================================
-       			if (heightverifier <= assignedColumnHeight){
-       				//increase the real height until it reaches the theoretical one, then change column and start again
-       				heightverifier = heightverifier + height;
-       				if (heightverifier > assignedColumnHeight){
-       					//var heightverifierTotal = heightverifier - height;
-       					//console.log('catch the height of the column '+ heightverifierTotal +' and store it in an array');
-						columnVerifier++;
-						if (columnVerifier>columnNum){
-							var offsetHeight = +height;
-							//console.log('this should not be here columnVerifier: '+columnVerifier+' offset height '+offsetHeight);
-							offsetHeights.push(offsetHeight);
-        				}
-						heightverifier = 0;
-       				}
-       			} 	
-       			
-       			//beginning a new column 
-        		if (heightverifier==0){
-        		 	heightverifier = height;
-        		 	//console.log('end the loop with height:'+height );
-        		 	//storeThoseHeights();
-        		}
-      		   	
-       		   	//console.log(parent+' ===== '+elementCount+' ===== Columns : '+columnVerifier+' assignedColumnHeight: '+assignedColumnHeight+' heightverifier: '+heightverifier+' (+height '+height+' )');
-    		});
-
-			//Grab the offset values and turn them into a sum
-			if(offsetHeights.length > 0) {
-			    var offsetSum = 0;
-				$.each(offsetHeights,function(){offsetSum+=parseFloat(this) || 0;});
-				//console.log(offsetSum);
-			}
-			
-			if (columnVerifier>columnNum){
-       		   		//console.log('algorithm issue for '+parent+' , columnVerifier: '+columnVerifier+' > columnNum: '+columnNum);
-       		   		//console.log('catch the height of the offset columns '+ offsetHeight +' and store it in an array');
-       		   		correctAssignedHeight(parent,assignedColumnHeight,minHeight);
-       		   	}
-       		   	else{
-       		   		applyAssignedHeight(parent,assignedColumnHeight);
-       		   	}
-			
-			//console.log('=============////////////============');
-	
+    			else{
+    				if (assignedColumnHeight - minHeight > minHeight) {
+    					assignedColumnHeight -= minHeight;
+    					SpaceCalc.needToRethink(parent,children,totalHeight,maxHeight,minHeight);
+    				}
+	   			}
+    		}
 		}
 
-		function applyAssignedHeight(parent,assignedColumnHeight){
-			//console.log('applying the height for'+parent+'.assignedColumnHeight: '+assignedColumnHeight);
-			$(parent).height(assignedColumnHeight); // Normally distributed
+        //Check if the assigned Colum Height manages to reach the Total Height in MORE columns than the expected
+        $(parent).find(children).each(function(){
+        	height = $(this).outerHeight(true);
+        	minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
+        	elementCount++;
+       		if (heightverifier <= assignedColumnHeight){
+       			//increase the real height until it reaches the theoretical one, then change column and start again
+       			heightverifier = heightverifier + height;
+       			if (heightverifier > assignedColumnHeight){
+					columnVerifier++;
+					heightverifier = 0;
+       			}
+       		} 	
+       		//beginning a new column 
+        	if (heightverifier===0){heightverifier = height;}
+        	//console.log(parent+' ===== '+elementCount+' ===== Columns : '+columnVerifier+' assignedColumnHeight: '+assignedColumnHeight+' heightverifier: '+heightverifier+' (+height '+height+' )');
+    	});
 
+		//Decide how we should proceed, slowly growing the calc and checking, or if all is good, apply it to the layout
+		if (columnVerifier>columnNum){
+			assignedColumnHeight += minHeight;
+			SpaceCalc.needToRethink(parent,children,totalHeight,maxHeight,minHeight);
+       	}
+       	else{
+       		assignedColumnHeight += 2;//IE fix
+       		SpaceCalc.applyAssignedHeight(parent,assignedColumnHeight);
+       	}
+	},
+
+	needToRethink: function(parent,children,totalHeight,maxHeight,minHeight){
+		console.log('rethinking for '+parent);
+		SpaceCalc.verifyAutoHeight(parent,children,totalHeight,maxHeight,minHeight);
+	},
+
+	applyAssignedHeight: function(parent,assignedColumnHeight){
+		$(parent).height(assignedColumnHeight);
+	},
+
+	doYourMath : function () {
+		SpaceCalc.colWidth();
+		SpaceCalc.processAutoheight('#homeland','.simple-list');
+		SpaceCalc.processAutoheight('#overseas','.simple-list');
+		SpaceCalc.processAutoheight('#onlineStores','.simple-list');
+		{% if settings.store_locator_aggregate_Special %}
+		for (var x=0;  x < uniqueSpecialsTotal; x++) {
+			SpaceCalc.processAutoheight('#specialfeats-' + x + '','.simple-list');
+			console.log('processing for #specialfeats-' + x);
 		}
-
-		function correctAssignedHeight(parent,assignedColumnHeight,minHeight){
-			//console.log('adjusting the height for'+parent+'.Initial assignedColumnHeight: '+assignedColumnHeight+'.Adding the minHeight: '+minHeight);
-			//add the minimum height until we escape the loop
-			//assignedColumnHeight =+(2*minHeight);
-			$(parent).height(assignedColumnHeight+minHeight); // Normally distributed
-
-			
-			//processAutoheight(parent,'.simple-list',0,0);
-		}
-
-		doYourMath = function () {
-			colWidth();
-			processAutoheight('#homeland','.simple-list',0,0);
-			processAutoheight('#overseas','.simple-list',0,0);
-			processAutoheight('#onlineStores','.simple-list',0,0);
-			{% if settings.store_locator_aggregate_Special %}
-			for (var x=0;  x < uniqueSpecialsTotal; x++) {
-				//console.log('processing for specialfeats-'+x+'');
-				processAutoheight('#specialfeats-' + x + '','.simple-list',0,0);
-			}
-			{% else %}
-			processAutoheight('#specialStores','.simple-list',0,0);
-			{% endif %}
-		};
-
-		isotope = function () {
-			//console.log('isotope fitColumns is running');
-			$container.isotope({
-				isResizeBound: false,
-				isFitWidth: false,
-				{% unless settings.store_locator_use_selectBox == "none" %}
-				itemSelector: '.retailers_info',
-				masonry: {
-					columnWidth: colWidth(),
-					gutter: gutterwidth
-				}
-				{% endunless %}
-				{% if settings.store_locator_use_selectBox == "none" %}
-				itemSelector: '.simple-list',
-				layoutMode: 'fitColumns',
-				{% endif %}
-
-			});
-		};
-
-		{% if settings.store_locator_use_selectBox == "none" %}
-		doYourMath();
+		{% else %}
+		SpaceCalc.processAutoheight('#specialStores','.simple-list');
 		{% endif %}
+	},
 
-	{% endif %}
-
-
-  	isotope();
-}); // LOAD
-
-var myEfficientFn = debounce(function() {
-		//console.log( 'Resize running!===============================');		
-		{% if settings.store_locator_order == "fitColumns" %}
+	isotope : function () {
+		$container = $('.float-mason');
+		$container.isotope({
+			isResizeBound: false,
+			isFitWidth: false,
+			{% unless settings.store_locator_use_selectBox == "none" %}
+			itemSelector: '.retailers_info',
+			masonry: {
+				columnWidth: SpaceCalc.colWidth(),
+				gutter: SpaceCalc.gutterwidth
+			}
+			{% endunless %}
 			{% if settings.store_locator_use_selectBox == "none" %}
-				doYourMath();
+			itemSelector: '.simple-list',
+			layoutMode: 'fitColumns',
 			{% endif %}
+		});
+	},
+
+{% endif %}
+}
+
+var InitLayoutCalculation = function(){
+	{% if settings.store_locator_order == "fitColumns" %}
+		{% if settings.store_locator_use_selectBox == "none" %}
+		SpaceCalc.doYourMath();
 		{% endif %}
-    	isotope();
+	{% endif %}
+    SpaceCalc.isotope();
+};
+
+var reLayout = debounce(function() {
+		InitLayoutCalculation();
 	}, 250);
-window.addEventListener('resize', myEfficientFn);
+
+
+$(document).ready(function() {InitLayoutCalculation();});
+
+window.addEventListener('resize', reLayout);
+
+
+
 </script>
