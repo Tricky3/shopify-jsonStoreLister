@@ -8,6 +8,12 @@
   * /templates/__page.retailers.liquid__ 	 alternate Page template _containing_
   * `div#retailers_placeholder`
 
+## Dependencies
+* [Jquery 1.8 or higher](http://jquery.com/)
+* [Isotope](http://isotope.metafizzy.co/)
+* [jQuery Selectbox plugin](https://code.google.com/p/select-box/)
+
+
 ### JSON file setup
 
 ``` json
@@ -37,9 +43,15 @@ __notes__
 
 ### View Options
 
-* 1
-* 2
-* 3
+* 1 Drop Down Style, driven by [jQuery Selectbox plugin](https://code.google.com/p/select-box/)
+* 2 Links-based, with collapsible groups
+* 3 Full-list, with horizontal or vertical layout
+
+### Features
+Responsive Layout with configurable Breakpoints & Columns :: Script calculates automatically the width for each column
+Options for hiding Retailers Outside the US, Online and/or Special Retailers
+Aggregate data for Retailers Outside the US as well as for Special Retailers
+Script automatically orders and groups the data by name and country 
 
 ### As seen on:
 
