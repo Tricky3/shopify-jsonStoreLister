@@ -808,7 +808,7 @@ for (var x=0;  x < statesTotal; x++) {
 	retailersByState.sort(sortByProperty("Name"));
 	replaceState(state);
 
-	{% if settings.store_locator_aggregate_Special %}
+	
 	//**************************  If it is an Overseas Store or a featured Store, then simply ignore it for parsing
 		if ((outsideUS === true) && (physicalStore === true) && (featured === false) || (outsideUS === true) && (physicalStore === false) && (featured === true)) { } 
 		else {
@@ -820,23 +820,7 @@ for (var x=0;  x < statesTotal; x++) {
 					var theheading = "Online";var domChange = "onlinewrapped";
 				}
 			}
-	{% else %}
-	//**************************  If it is an Overseas Store then simply ignore it for parsing
-		if ((outsideUS === true) && (physicalStore === true) && (featured === false)) { } 
-		else {
-			if ((physicalStore === true) && (featured === false)) {
-				var theheading = stateLiteral;var domChange = "no-domchange";
-			}
-			else{
-				if (featured === false){
-					var theheading = "Online";var domChange = "onlinewrapped";
-				}
-				else{
-					var theheading = "Featured";var domChange = "featuredwrapped";
-				}
-			}
-	{% endif %}
-
+	
 		{% unless settings.store_locator_use_selectBox == "none" %}
 			if (state === startingState) { var openState = " open";	} else { var openState ="";}
 			output+= '<div class="collapse-item anim-height'+openState+'" id="'+state.toLowerCase().replace(/\s+/g, '')+'">';
@@ -1161,9 +1145,6 @@ function debounce(func, wait, immediate) {
 	//Use jquery for toggling 
 	$(document).ready(function() {InitSorter();});
 
-
-	
-
 	var InitSorter = function(){
 		var sortElement = $('#sort-by');
 		sortElement
@@ -1329,7 +1310,6 @@ var SpaceCalc = {
 		$w -= SpaceCalc.gutterwidth*(columnNum-1);
 		columnWidth = Math.floor($w/columnNum);
 		marg = $(".simple-list:first").outerWidth(true) - $(".simple-list:first").outerWidth();
-		console.log('margin is '+marg);
 	
 		$('.commonuse').find('.simple-list').each(function() {
 			var $item = $(this);
@@ -1437,7 +1417,7 @@ var SpaceCalc = {
 	},
 
 	needToRethink: function(parent,children,totalHeight,maxHeight,minHeight){
-		console.log('rethinking for '+parent);
+		//console.log('rethinking for '+parent);
 		SpaceCalc.verifyAutoHeight(parent,children,totalHeight,maxHeight,minHeight);
 	},
 
@@ -1453,7 +1433,7 @@ var SpaceCalc = {
 		{% if settings.store_locator_aggregate_Special %}
 		for (var x=0;  x < uniqueSpecialsTotal; x++) {
 			SpaceCalc.processAutoheight('#specialfeats-' + x + '','.simple-list');
-			console.log('processing for #specialfeats-' + x);
+			//console.log('processing for #specialfeats-' + x);
 		}
 		{% else %}
 		SpaceCalc.processAutoheight('#specialStores','.simple-list');
@@ -1495,8 +1475,7 @@ var reLayout = debounce(function() {
 		InitLayoutCalculation();
 	}, 250);
 
-
-$(document).ready(function() {InitLayoutCalculation();});
+$(window).load(function(){InitLayoutCalculation();});
 
 window.addEventListener('resize', reLayout);
 
