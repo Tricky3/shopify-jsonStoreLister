@@ -6,6 +6,18 @@
         "content": "Configure the looks and feel of your Retailers"
       },
       {
+        "type": "text",
+        "id": "store_locator_loading_msg",
+        "label": "Loading Screen Message",
+        "info":  "Leave blank if you don't want any message to show while your data is processing"
+      },
+      {
+        "type":      "image",
+        "id":        "store_locator_loading_msg.gif",
+        "label":     "Loading Image",
+        "info":      "If empty, a default loader image will display"
+      },
+      {
         "type": "header",
         "content": "Menu Building :: Choose between a dropdown menu ,a list of links, or no menu at all"
       },

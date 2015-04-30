@@ -1,5 +1,4 @@
 // STORE LOCATOR
-
 //Custom Select 
  {% if settings.store_locator_use_selectBox %}
 .customSelect {
@@ -183,6 +182,25 @@
 }
 
 #storelocating{
+  position: relative;
+  #loading {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    display: block;
+    opacity: 1;
+    background-color: #fff;
+    z-index: 99;
+    text-align: center;
+    #loading-msg {
+      position: absolute;
+      top: 10%;
+      width: 100%;
+      z-index: 100;
+    }
+  }
   .inner{margin:0;}
   .no-collapse {display: inline-block;}
   h1{

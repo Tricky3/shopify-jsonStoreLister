@@ -1475,7 +1475,12 @@ var reLayout = debounce(function() {
 		InitLayoutCalculation();
 	}, 250);
 
-$(window).load(function(){InitLayoutCalculation();});
+$(window).load(function(){
+	InitLayoutCalculation();
+	$( "#loading" ).fadeOut( "fast", function() {
+    	$( "#loading" ).remove();
+  	});
+});
 
 window.addEventListener('resize', reLayout);
 

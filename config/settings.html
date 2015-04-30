@@ -1,6 +1,20 @@
 <fieldset>
   <legend>Store Locator</legend>
-  <span class="note">Configure the looks and feel of your Retailers</span>
+  <p class="note">Configure the looks and feel of your Retailers</p>
+  <table>
+    <tr>
+      <th><label for="store_locator_loading_msg">Loading Screen Message</label></th>
+      <td>
+        <input type="text" id="store_locator_loading_msg" name="store_locator_loading_msg" class="text" value="Loading Retailers" />
+        <p class="note">Leave blank if you don't want any message to show while your data is processing</p>
+      </td>
+    </tr>
+    <tr>
+        <th><label for="store_locator_loading_img">Loading GIF Image<p class="note">If empty, a default loader image will display</p></label></th>
+        <td><input type="file" id="store_locator_loading_img" name="store_locator_loading_img.gif" /></td>
+      </tr>
+    </table>
+
   <table>
     <tr>
       <td colspan="6"><h3 class="heading">Menu Building :: <span class="note">Choose between a dropdown menu ,a list of links, or no menu at all</span></h3></td>

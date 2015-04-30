@@ -1,4 +1,10 @@
 <div id="storelocating">
+	<div id="loading">
+		<div id="loading-msg">
+			<p>{{ settings.store_locator_loading_msg | strip_html  }}</p>
+	  		<img src="{{ 'store_locator_loading_img.gif' | asset_url }}" alt="{{ settings.store_locator_loading_msg | strip_html  }}">
+	  	</div>
+	</div>
 	<h1>{{ page.title }}</h1>
 	<div class="pageimpact retailers">
 		<div id="retailers_placeholder"></div>
