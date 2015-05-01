@@ -646,28 +646,34 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		//create the links for the Online stores
 		output+= '<option value="online">Online Stores</option>';
 	{% endif %}
+
+	{% if settings.store_locator_show_Special %}
+		output+= '<option value="special">Special Retailers</option>';
+	{% endif %}
+	
 	//create the links for the Overseas Retailers
 	{% if settings.store_locator_show_Overseas %}
 		{% if settings.store_locator_aggreagate_Overseas %}
 			output+= '<option value="international">International Stores</option>';
 		{% else %}
+		output+= '<optgroup label="International Stores">';
 			for (var j= 0; j < overseasCountriesTotal; j++) {
         		overseasCountry = overseasCountriesArr[j].country;
         		overseasCountryLiteral = overseasCountriesArr[j].countryLiteral;
 				output+= '<option value="'+overseasCountry.toLowerCase().replace(/\s+/g, '')+'">'+overseasCountryLiteral.toLowerCase()+'</option>';
 			}
+		output+= '</optgroup>';
 		{% endif %}
 	{% endif %}
 
-	{% if settings.store_locator_show_Special %}
-		output+= '<option value="special">Special Retailers</option>';
-	{% endif %}
 	//create the links for the US
+	output+= '<optgroup label="US Stores">';
 	for (var j= 0; j < usStatesTotal; j++) {
 	    usState = usArr[j].state;
 	    usStateLiteral = usArr[j].stateLiteral;
 	    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral.toLowerCase()+'</option>';
 	}
+	output+= '</optgroup>';
 	output+= '</select>';
 	output+= '</div>';   
 {% endif %}
