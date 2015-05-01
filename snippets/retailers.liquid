@@ -639,9 +639,6 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 
 
 {% if settings.store_locator_use_selectBox == "dropdown" or settings.store_locator_use_selectBox == "linksanddropdown" %}
-	
-	articleClass = "commonuse dropdownStyle";
-	
 	output+= '<input id="default-collection-sortby" type="hidden" value="'+startingState.toLowerCase()+'">';
 	output+= '<div class="sorter" style="text-align: center;"><label for="sort-by">Select Location: </label>';
 	output+= '<select id="sort-by">';
@@ -669,13 +666,12 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 	for (var j= 0; j < usStatesTotal; j++) {
 	    usState = usArr[j].state;
 	    usStateLiteral = usArr[j].stateLiteral;
-	    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral+'</option>';
+	    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral.toLowerCase()+'</option>';
 	}
 	output+= '</select>';
 	output+= '</div>';   
 {% endif %}
 {% if settings.store_locator_use_selectBox == "links" or settings.store_locator_use_selectBox == "linksanddropdown" %}
-	articleClass = "commonuse linksStyle";
 	//creating the menu links 
 	output+= '<div class="menu-items-wrapper"><div class="menu-items container"><div class="inner clearfix">';
 	//create the links for the US
@@ -693,7 +689,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
         		usState = usArr[j].state;
         		usStateLiteral = usArr[j].stateLiteral;
         		if (usState === startingState) { var activeclass = " active";	}else { var activeclass = "";}
-				output+= '<li class="retailers_info linked"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-name="'+usStateLiteral+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
+				output+= '<li class="retailers_info linked"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-name="'+usStateLiteral.toLowerCase()+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
       		}
       		output+= '</ul>';
     	}
@@ -773,6 +769,19 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 	output+= '</div>';
 	output+= '</div></div></div>';
 {% endif %}
+
+{% if settings.store_locator_use_selectBox == "dropdown"%}
+articleClass = "commonuse dropdownStyle";
+{% endif %}
+
+{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
+articleClass = "commonuse mixedStyle";
+{% endif %}
+
+{% if settings.store_locator_use_selectBox == "links" %}
+articleClass = "commonuse linksStyle";
+{% endif %}
+
 {% if settings.store_locator_use_selectBox == "none" %}
 	{% if settings.store_locator_order == "fitColumns" %}
 	articleClass = "commonuse nomenuStyle ftclmn";
@@ -805,18 +814,33 @@ for (var x=0;  x < statesTotal; x++) {
 	replaceState(state);
 
 	
+	{% if settings.store_locator_aggregate_Special %}
+	
 	//**************************  If it is an Overseas Store or a featured Store, then simply ignore it for parsing
 		if ((outsideUS === true) && (physicalStore === true) && (featured === false) || (outsideUS === true) && (physicalStore === false) && (featured === true)) { } 
+		else {
+			for (var x=0;  x < statesTotal; x++) {
+					var theheading = "Online";var domChange = "onlinewrapped";
+				}
+			
+	{% else %}
+	//**************************  If it is an Overseas Store then simply ignore it for parsing
+		if ((outsideUS === true) && (physicalStore === true) && (featured === false)) { } 
 		else {
 			if ((physicalStore === true) && (featured === false)) {
 				var theheading = stateLiteral;var domChange = "no-domchange";
 			}
-			else {
+			else{
 				if (featured === false){
 					var theheading = "Online";var domChange = "onlinewrapped";
 				}
+				else{
+					var theheading = "Featured";var domChange = "featuredwrapped";
+				}
 			}
-	
+	{% endif %}
+
+
 		{% unless settings.store_locator_use_selectBox == "none" %}
 			if (state === startingState) { var openState = " open";	} else { var openState ="";}
 			output+= '<div class="collapse-item anim-height'+openState+'" id="'+state.toLowerCase().replace(/\s+/g, '')+'">';
@@ -866,12 +890,9 @@ for (var x=0;  x < statesTotal; x++) {
 
  			output+= '<div class="times-'+tot+' '+retailClass+' '+whereIntheWorld+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
  			//Safety Valves, you can never have enough
-			if (website !=="") 
-				{output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';} 
-			else 
-				{output+='<li itemprop="url" class="just_the_name">' + name + '</li>';	
-			}
-			if (address !=="") 	{output+='<li itemprop="street-address">' + address + '</li>'; }
+			if (website !=="") 	{output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';} 
+			else 				{output+='<li itemprop="url" class="just_the_name">' + name + '</li>';}
+			if (address !=="") 	{output+='<li itemprop="street-address">' + address + '</li>';}
 			if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
 			if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="region">' + thestate +' </span><span itemprop="postal-code">'+ zip + '</span></li>';}
 			if (phone !=="")    {output+='<li itemprop="tel">' +phone + '</li>';}
@@ -894,7 +915,6 @@ output+= '</div>';
 	output+= '<div class="inner clearfix float-mason" id="overseas">';
 	{% endif %}
 
-
 	//In case we need the data to be aggregated under a single option`
 	{% unless settings.store_locator_use_selectBox == "none" %}
 		{% if settings.store_locator_aggreagate_Overseas %}
@@ -902,7 +922,6 @@ output+= '</div>';
 			output+= '<div class="collapse-item anim-height'+openState+'" id="international"><div class="collapse-wrap"><div class="collapse-content">';
 		{% endif %}
 	{% endunless %}
-
 
 	// ======================================================= Create Overseas blocks =======================================================
 	for (var x=0;  x < overseasCountriesTotal; x++) {
@@ -982,10 +1001,6 @@ output+= '</div>';
 		{% if settings.store_locator_use_selectBox == "none" %}
 			output+= '</div></div></div>';
 		{% endif %}
-		
-				
-		
-		
 	}
 	
 	
@@ -999,15 +1014,12 @@ output+= '</div>';
 		{% endif %}
 	{% endunless %}
 
-	
-
 {% endif %}
 
 //========================================= Section 2.3 :: Creating the Placeholders for the rest of the Online Stores =========================================
 
 //Create the necessary Placeholders for the rest of the Divisions
 {% if settings.store_locator_use_selectBox == "none" %}
-	
 	{% if settings.store_locator_show_Online %}
 		var theh2Title = "Online";
 		var theIDholder = "onlineStores";
@@ -1016,14 +1028,11 @@ output+= '</div>';
 		//output+= '<div class="grid-sizer"></div>';
 		output+= '</div>';
 	{% endif %}
-
 {% endif %}
-
 
 //================================== Section 2.4 :: Creating the Databoxes for the Special Retailers, grouped and ordered ==================================
 
-	{% if settings.store_locator_show_Special %}
-
+{% if settings.store_locator_show_Special %}
 	//In case we need the data to be aggregated under a single option`
 	{% unless settings.store_locator_use_selectBox == "none" %}
 		{% if settings.store_locator_aggregate_Special %}
@@ -1041,82 +1050,76 @@ output+= '</div>';
 		output+= '<div class="fullspan">';
 		output+= '<h2 class="regionheading">'+theh2Title+'</h2></div>';
 	
-
 		{% if settings.store_locator_aggregate_Special %}
 			output+= '<div id="'+theIDholder+'">';
 		{% else %}
 			output+= '<div id="'+theIDholder+'" class="inner clearfix float-mason">';
 		{% endif %}
+	
 	{% endif %}
 	
-		{% if settings.store_locator_aggregate_Special %}
-			for (var x=0;  x < uniqueSpecialsTotal; x++) {
-				var thesplitName = uniqueSpecials[x];
-				//get all the objects that contain those unique splitNames
-				var specialRetailersBySplitName = getObjects(specialRetailersResultArr,'splitName',thesplitName);
-				//sort the Objects
-				specialRetailersBySplitName.sort(sortByProperty("splitState"));
-				//console.log(specialRetailersBySplitName);
-				var theheading = specialRetailersBySplitName[0]["splitName"];
-				var theheadingSanitized = specialRetailersBySplitName[0]["splitName"].toLowerCase().replace(/\s+/g, '');
-				var domChange = "no-domchange"; 
+	{% if settings.store_locator_aggregate_Special %}
+		for (var x=0;  x < uniqueSpecialsTotal; x++) {
+			var thesplitName = uniqueSpecials[x];
+			//get all the objects that contain those unique splitNames
+			var specialRetailersBySplitName = getObjects(specialRetailersResultArr,'splitName',thesplitName);
+			//sort the Objects
+			specialRetailersBySplitName.sort(sortByProperty("splitState"));
+			//console.log(specialRetailersBySplitName);
+			var theheading = specialRetailersBySplitName[0]["splitName"];
+			var theheadingSanitized = specialRetailersBySplitName[0]["splitName"].toLowerCase().replace(/\s+/g, '');
+			var domChange = "no-domchange"; 
+					output+= '<div class="fullspan statehead"><h3 class="thestate">'+theheading+'</h3></div>';
+			output+= '<div class="thefeaturedheights inner clearfix float-mason" id="specialfeats-'+x+'">';
+
+			for (var i=0,  tot=specialRetailersBySplitName.length; i < tot; i++) {
+    			var name 		= specialRetailersBySplitName[i]["Name"];
+				var address 	= specialRetailersBySplitName[i]["Address"];
+				var address2 	= specialRetailersBySplitName[i]["Address 2"];
+				var city 		= specialRetailersBySplitName[i]["City"];
+				var thestate	= 'specialfeatured';
+				var country 	= specialRetailersBySplitName[i]["Country"];
+				var zip 		= specialRetailersBySplitName[i]["Postal/Zip Code"];
+				var phone 		= specialRetailersBySplitName[i]["Phone"];
+				var website 	= specialRetailersBySplitName[i]["Website"];
+				var lat 		= specialRetailersBySplitName[i]["Latitude"];
+				var lng 		= specialRetailersBySplitName[i]["Longitude"];
+
+				output+= '<div class="simple-list '+domChange+' times-'+tot+' retailers_info '+thestate+'" data-country="'+theheadingSanitized+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
 		
-				output+= '<div class="fullspan statehead"><h3 class="thestate">'+theheading+'</h3></div>';
-				output+= '<div class="thefeaturedheights inner clearfix float-mason" id="specialfeats-'+x+'">';
-
-				for (var i=0,  tot=specialRetailersBySplitName.length; i < tot; i++) {
-    				var name 		= specialRetailersBySplitName[i]["Name"];
-					var address 	= specialRetailersBySplitName[i]["Address"];
-					var address2 	= specialRetailersBySplitName[i]["Address 2"];
-					var city 		= specialRetailersBySplitName[i]["City"];
-					var thestate	= 'specialfeatured';
-					var country 	= specialRetailersBySplitName[i]["Country"];
-					var zip 		= specialRetailersBySplitName[i]["Postal/Zip Code"];
-					var phone 		= specialRetailersBySplitName[i]["Phone"];
-					var website 	= specialRetailersBySplitName[i]["Website"];
-					var lat 		= specialRetailersBySplitName[i]["Latitude"];
-					var lng 		= specialRetailersBySplitName[i]["Longitude"];
-	
-					output+= '<div class="simple-list '+domChange+' times-'+tot+' retailers_info '+thestate+'" data-country="'+theheadingSanitized+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
-			
-					/*
-					if (website !=="") {
-						output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
-					} 	else {
-						output+='<li itemprop="url" class="just_the_name">' + name + '</li>';
-					}
-					*/
-					if (address !=="")  {output+='<li itemprop="street-address">' + address + '</li>';}
-					if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
-					if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="postal-code">'+ zip + '</span></li>';}
-					if (phone !=="") 	{output+='<li itemprop="tel">' +phone + '</li>';}
-					//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
-					output+='</ul></div>';
-    			}
-				output+= '</div>';
-			}
-		{% endif %}
+				/*
+				if (website !=="") {
+					output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
+				} 	else {
+					output+='<li itemprop="url" class="just_the_name">' + name + '</li>';
+				}
+				*/
+				if (address !=="")  {output+='<li itemprop="street-address">' + address + '</li>';}
+				if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
+				if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="postal-code">'+ zip + '</span></li>';}
+				if (phone !=="") 	{output+='<li itemprop="tel">' +phone + '</li>';}
+				//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
+				output+='</ul></div>';
+    		}
+			output+= '</div>';
+		}
+	{% endif %}
  		
- 		{% if settings.store_locator_use_selectBox == "none" %}
- 		output+= '</div></div>';
- 		{% endif %}
+ 	{% if settings.store_locator_use_selectBox == "none" %}
+ 	output+= '</div></div>';
+ 	{% endif %}
 
-		{% unless settings.store_locator_special_explanatory == blank %}
-    		output+= '<p id="explanatory"><span class="sup">*</span> {{ settings.store_locator_special_explanatory }}</p>';
-		{% endunless %}
-
-
-	{% unless settings.store_locator_use_selectBox == "none" %}
-		{% if settings.store_locator_aggregate_Special %}
-			output+= '</div></div></div>';
-		{% endif %}
+	{% unless settings.store_locator_special_explanatory == blank %}
+    output+= '<p id="explanatory"><span class="sup">*</span> {{ settings.store_locator_special_explanatory }}</p>';
 	{% endunless %}
 
-
-
+	{% unless settings.store_locator_use_selectBox == "none" %}
+	{% if settings.store_locator_aggregate_Special %}
+	output+= '</div></div></div>';
 	{% endif %}
+	{% endunless %}
 
-
+{% endif %}
 
 output+= '</div>';
 output+= '</article>';
@@ -1144,12 +1147,22 @@ function debounce(func, wait, immediate) {
 
 	var InitSorter = function(){
 		var sortElement = $('#sort-by');
+		var togglers = $('a.togglers');
+
+
+		//var linkbtn = $(this);
+
 		sortElement
 			.val($('#default-collection-sortby').val())
 			.bind('change', function() {
 				var closeBtn = ($(this).attr('data-collapse') == 'false') ? true : false;
-				var collapseEl = '#'+$(this).val();
+				var theVal = $(this).val();
+				var collapseEl = '#'+theVal;
 				var collapseItem = $(collapseEl);
+				var lowerVal = theVal.toLowerCase();
+				console.log('lowerVal is '+lowerVal);
+				var collapseItemName = $('*[data-collapse-el="#'+lowerVal+'"]');
+
 				//Open Accordion
 				var toggleCollapse = function(item, type) {
 					if(type == 'close')	{
@@ -1170,6 +1183,10 @@ function debounce(func, wait, immediate) {
         		} 
         		else {
           			if(collapseItem.parents().find('.open').length){
+          				{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
+          				togglers.removeClass('active');
+        				collapseItemName.addClass('active');
+        				{% endif %}
             			toggleCollapse($('.collapse-item.open'), 'close');
             			setTimeout(function(){
               				toggleCollapse(collapseItem, 'open');
@@ -1177,6 +1194,11 @@ function debounce(func, wait, immediate) {
           			} 
           			else {
             			toggleCollapse(collapseItem, 'open');
+            			{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
+            			togglers.removeClass('active');
+        	 			collapseItemName.addClass('active');
+        	 			{% endif %}
+
           			}
         		}
   			});
@@ -1187,14 +1209,13 @@ function debounce(func, wait, immediate) {
       				sortElement.trigger('change');
     			}
   			});
-
+			
+			{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
   			$('a[data-collapse]').on('click', function(){
-        	var btn = $(this),
-        	nameValue = btn.attr('data-name');
-            
-            console.log('nameValue is '+nameValue);
-            selectBox.jumpToValue(nameValue);
-            });
+  				var btn = $(this), nameValue = btn.attr('data-name');
+            	selectBox.jumpToValue(nameValue);
+			});
+			{% endif %}
 
 
 		};
@@ -1207,10 +1228,9 @@ function debounce(func, wait, immediate) {
         	togglers = $('a.togglers'),
             closeBtn = (btn.attr('data-collapse') == 'false') ? true : false;
             collapseEl = btn.attr('data-collapse-el'),
-            collapseItem = $(collapseEl);
-
-
-            
+            collapseItem = $(collapseEl),
+            nameValue = btn.attr('data-name');
+			
 	        
 	        //Open Accordion
         	var toggleCollapse = function(item, type){
