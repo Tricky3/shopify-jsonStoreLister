@@ -638,8 +638,10 @@ var all_usaStatesOuterloops =  ~~(all_the_statesTotal/all_states_groupdivider);
 var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2);
 
 
-{% if settings.store_locator_use_selectBox == "dropdown" %}
+{% if settings.store_locator_use_selectBox == "dropdown" or settings.store_locator_use_selectBox == "linksanddropdown" %}
+	
 	articleClass = "commonuse dropdownStyle";
+	
 	output+= '<input id="default-collection-sortby" type="hidden" value="'+startingState.toLowerCase()+'">';
 	output+= '<div class="sorter" style="text-align: center;"><label for="sort-by">Select Location: </label>';
 	output+= '<select id="sort-by">';
@@ -663,8 +665,6 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 	{% if settings.store_locator_show_Special %}
 		output+= '<option value="special">Special Retailers</option>';
 	{% endif %}
-
-	
 	//create the links for the US
 	for (var j= 0; j < usStatesTotal; j++) {
 	    usState = usArr[j].state;
@@ -673,7 +673,8 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 	}
 	output+= '</select>';
 	output+= '</div>';   
-{% elsif settings.store_locator_use_selectBox == "links" %}
+{% endif %}
+{% if settings.store_locator_use_selectBox == "links" or settings.store_locator_use_selectBox == "linksanddropdown" %}
 	articleClass = "commonuse linksStyle";
 	//creating the menu links 
 	output+= '<div class="menu-items-wrapper"><div class="menu-items container"><div class="inner clearfix">';
@@ -692,7 +693,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
         		usState = usArr[j].state;
         		usStateLiteral = usArr[j].stateLiteral;
         		if (usState === startingState) { var activeclass = " active";	}else { var activeclass = "";}
-				output+= '<li class="retailers_info linked"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
+				output+= '<li class="retailers_info linked"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-name="'+usStateLiteral+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
       		}
       		output+= '</ul>';
     	}
@@ -716,7 +717,6 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		var special_shown = "o";
 	{% endif %}
 
-
 	output+= '<div class="additional_hold '+overseas_shown+online_shown+special_shown+'">';
 	//End of US retailers
 	{% if settings.store_locator_show_Overseas %}
@@ -726,7 +726,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		output+= '<div class="float-mason">';
 		{% if settings.store_locator_aggreagate_Overseas %}
     		output+= '<ul class="separator">';
-			output+= '<li class="retailers_info linked" id="intenationalHolder"><a class="togglers" id="state-non-us" data-collapse="true" data-collapse-el="#international" data-id="international">All Non-US Stores</a></li>';
+			output+= '<li class="retailers_info linked" id="intenationalHolder"><a class="togglers" id="state-non-us" data-collapse="true" data-collapse-el="#international" data-name="International Stores" data-id="international">All Non-US Stores</a></li>';
     		output+= '</ul>';
     	{% else %}
 			outerloop:
@@ -740,7 +740,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
         				overseasCountry = overseasCountriesArr[j].country;
         				overseasCountryLiteral = overseasCountriesArr[j].countryLiteral;
         				if (overseasCountry === startingState) { var data_collapse = "false";	}else { var data_collapse = "true"; }
-						output+= '<li class="retailers_info linked"><a class="togglers" id="country-'+overseasCountry+'" data-collapse="true" data-collapse-el="#'+overseasCountry.toLowerCase().replace(/\s+/g, '')+'" data-id="'+overseasCountry.toLowerCase()+'">'+overseasCountryLiteral.toLowerCase()+'</a></li>';
+						output+= '<li class="retailers_info linked"><a class="togglers" id="country-'+overseasCountry+'" data-collapse="true" data-collapse-el="#'+overseasCountry.toLowerCase().replace(/\s+/g, '')+'" data-name="'+overseasCountryLiteral.toLowerCase()+'" data-id="'+overseasCountry.toLowerCase()+'">'+overseasCountryLiteral.toLowerCase()+'</a></li>';
       				}
       				output+= '</ul>';
     			}
@@ -755,11 +755,10 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		output+= '<h3 class="findus in-online">Online</h3>';
 		output+= '<div class="float-mason">';
 		output+= '<ul class="separator" style = "width:100%;">';
-		output+= '<li class="retailers_info linked" id="onlineStateHolder"><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#online" data-id="online">All Online Stores</a></li>';
+		output+= '<li class="retailers_info linked" id="onlineStateHolder"><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#online" data-name="Online Stores" data-id="online">All Online Stores</a></li>';
 		output+= '</ul>';
 		output+= '</div></div>';
 	{% endif %}
-
 
 	{% if settings.store_locator_show_Special %}
 		//create the links for the Online Retailers
@@ -767,18 +766,15 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 		output+= '<h3 class="findus in-online">Special Retailers</h3>';
 		output+= '<div class="float-mason">';
 		output+= '<ul class="separator" style = "width:100%;">';
-		output+= '<li class="retailers_info linked" id="specialStateHolder"><a class="togglers" id="state-featured" data-collapse="true" data-collapse-el="#special" data-id="special">Show our Special Retailers</a></li>';
+		output+= '<li class="retailers_info linked" id="specialStateHolder"><a class="togglers" id="state-featured" data-collapse="true" data-collapse-el="#special" data-name="Special Retailers" data-id="special">Show our Special Retailers</a></li>';
 		output+= '</ul>';
 		output+= '</div></div>';
 	{% endif %}
-
-
-	
-output+= '</div>';
-output+= '</div></div></div>';
-
-{% else %}
-{% if settings.store_locator_order == "fitColumns" %}
+	output+= '</div>';
+	output+= '</div></div></div>';
+{% endif %}
+{% if settings.store_locator_use_selectBox == "none" %}
+	{% if settings.store_locator_order == "fitColumns" %}
 	articleClass = "commonuse nomenuStyle ftclmn";
 	{% else %}
 	articleClass = "commonuse nomenuStyle msnr";
@@ -792,12 +788,12 @@ output+= '</div></div></div>';
 //===========================================================================================================================================================
 
 output+= '<article class="container '+ articleClass +'">';
-
+output+= '<div class="inner clearfix">';
 //======================================================= Section 2.1 :: Creating the Homeland Entries =======================================================
 
 {% if settings.store_locator_use_selectBox == "none" %}
 output+= '<div class="fullspan"><h2 class="regionheading">United States</h2></div>';
-output+= '<div class="inner clearfix float-mason" id="homeland">';
+output+= '<div class="clearfix float-mason" id="homeland">';
 {% endif %}
 //Creating the boxes for HomeLand, featured and Special 
 for (var x=0;  x < statesTotal; x++) {
@@ -1122,6 +1118,7 @@ output+= '</div>';
 
 
 
+output+= '</div>';
 output+= '</article>';
 document.getElementById("retailers_placeholder").innerHTML=output;
 //=========================================================== Section 3.1 :: Javascript Tricks ===========================================================
@@ -1141,7 +1138,7 @@ function debounce(func, wait, immediate) {
 	};
 };
 
-{% if settings.store_locator_use_selectBox == "dropdown" %}
+{% if settings.store_locator_use_selectBox == "dropdown" or settings.store_locator_use_selectBox == "linksanddropdown" %}
 	//Use jquery for toggling 
 	$(document).ready(function() {InitSorter();});
 
@@ -1190,10 +1187,20 @@ function debounce(func, wait, immediate) {
       				sortElement.trigger('change');
     			}
   			});
+
+  			$('a[data-collapse]').on('click', function(){
+        	var btn = $(this),
+        	nameValue = btn.attr('data-name');
+            
+            console.log('nameValue is '+nameValue);
+            selectBox.jumpToValue(nameValue);
+            });
+
+
 		};
 
-
-{% elsif settings.store_locator_use_selectBox == "links" %}
+{% endif %}
+{% if settings.store_locator_use_selectBox == "links" or settings.store_locator_use_selectBox == "linksanddropdown" %}
 	$(document).ready(function() {
 		$('a[data-collapse]').on('click', function(){
         	var btn = $(this),
@@ -1201,6 +1208,10 @@ function debounce(func, wait, immediate) {
             closeBtn = (btn.attr('data-collapse') == 'false') ? true : false;
             collapseEl = btn.attr('data-collapse-el'),
             collapseItem = $(collapseEl);
+
+
+            
+	        
 	        //Open Accordion
         	var toggleCollapse = function(item, type){
           		if(type == 'close'){
@@ -1242,7 +1253,8 @@ function debounce(func, wait, immediate) {
         	}
       	});
 	});
-{% else %}
+{% endif %}
+{% if settings.store_locator_use_selectBox == "none" %}
 
 var nonPhysicalHead = $('.onlinewrapped');
 var nonPhysical = $( '.domchange-online' );
