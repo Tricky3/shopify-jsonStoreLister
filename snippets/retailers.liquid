@@ -650,7 +650,7 @@ var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2)
 	{% if settings.store_locator_show_Special %}
 		output+= '<option value="special">Special Retailers</option>';
 	{% endif %}
-	
+
 	//create the links for the Overseas Retailers
 	{% if settings.store_locator_show_Overseas %}
 		{% if settings.store_locator_aggreagate_Overseas %}
@@ -1211,10 +1211,14 @@ function debounce(func, wait, immediate) {
 			sortElement.addClass('hidden');
 			var selectBox = new SelectBox({
     			selectbox:sortElement,
+    			height: 150,
     			changeCallback:function(value){
       				sortElement.trigger('change');
     			}
   			});
+
+  			
+				
 			
 			{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
   			$('a[data-collapse]').on('click', function(){
