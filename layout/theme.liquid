@@ -1,6 +1,8 @@
 {% if template == 'page.retailers' %}
     {{ 'storeLocator.scss.css' | asset_url | stylesheet_tag }}
+    {% if settings.store_locator_use_selectBox == "dropdown" or settings.store_locator_use_selectBox == "linksanddropdown" %}
     {{ 'selectbox.js' | asset_url | script_tag }}
+	{% endif %}
     {{ 'isotope.pkgd.min.js' | asset_url | script_tag }}
     {% if settings.store_locator_order == "fitColumns" %}
         {{ 'fit-columns.js' | asset_url | script_tag }}

@@ -206,7 +206,7 @@ $desktop-width:{{settings.store_locator_breakpoint_1}}px;
 }
 
 
-
+{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
 .sorter {
   @include mobileandtablets {
     display: block;
@@ -217,15 +217,14 @@ $desktop-width:{{settings.store_locator_breakpoint_1}}px;
 }
 
 .menu-items-wrapper{
-
   @include mobileandtablets {
     display: none;
   }
   @include desktop {
     display: block;
   }
-
 }
+{% endif %}
 
 
 
