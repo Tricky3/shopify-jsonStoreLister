@@ -11,16 +11,17 @@
         "label": "Loading Screen Message",
         "info":  "Leave blank if you don't want any message to show while your data is processing"
       },
-      {
+       {
         "type":      "image",
         "id":        "store_locator_loading_msg.gif",
         "label":     "Loading Image",
         "info":      "If empty, a default loader image will display"
-      },
+       },
       {
         "type": "header",
         "content": "Menu Building :: Choose between a dropdown menu ,a list of links, or no menu at all"
       },
+     
       {
         "type": "select",
         "id": "store_locator_use_selectBox",
@@ -33,6 +34,10 @@
           {
             "value": "links",
             "label": "Links-based Style"
+          },
+          {
+            "value": "linksanddropdown",
+            "label": "Links-based Style for Desktop, drop-down for Tablet and Mobile"
           },
           {
             "value": "none",
@@ -80,48 +85,26 @@
         "type": "text",
         "id": "store_locator_breakpoint_1",
         "label": "Breakpoint 1 (bigger screens)",
-        "default": "1164"
+        "default": "1164",
+        "info": "Expressed in pixels"
       },
       {
         "type": "text",
         "id": "store_locator_breakpoint_2",
         "label": "Breakpoint 2 (tablet screens)",
-        "default": "767"
+        "default": "767",
+        "info": "Expressed in pixels"
       },
       {
         "type": "text",
         "id": "store_locator_breakpoint_3",
         "label": "Breakpoint 3 (mobile screens)",
-        "default": "422"
+        "default": "422",
+        "info": "Expressed in pixels"
       },
       {
         "type": "select",
         "id": "store_locator_columnNum_1",
-        "label": "Columns for bigger screens",
-        "options": [
-          {
-            "value": "4",
-            "label": "4"
-          },
-          {
-            "value": "3",
-            "label": "3"
-          },
-          {
-            "value": "2",
-            "label": "2"
-          },
-          {
-            "value": "1",
-            "label": "1"
-          }
-        ],
-        "default": "4",
-        "info": "Valid when container width is greater than Breakpoint #1 (Container > Breakpoint #1)"
-      },
-      {
-        "type": "select",
-        "id": "store_locator_columnNum_2",
         "label": "Columns for Large screens",
         "options": [
           {
@@ -141,13 +124,38 @@
             "label": "1"
           }
         ],
+        "default": "4",
+        "info": "Valid when container width is greater than the width set for Bigger Screens i.e. Container > Bigger Screens (Breakpoint#1)"
+      },
+      {
+        "type": "select",
+        "id": "store_locator_columnNum_2",
+        "label": "Columns for Desktop screens",
+        "options": [
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          }
+        ],
         "default": "3",
-        "info": "Valid when container width is less than or equal to Breakpoint #1 but greater than Breakpoint #2 (Breakpoint #1 >= Number of Columns > Breakpoint #2)"
+        "info": "Valid when container width is between the width set for Bigger Screens and Tablet Screens i.e. Bigger Screens (Breakpoint#1) >= Container > Tablet Screens (Breakpoint#2)"
       },
       {
         "type": "select",
         "id": "store_locator_columnNum_3",
-        "label": "Columns for Medium-width screens",
+        "label": "Columns for Tablet screens",
         "options": [
           {
             "value": "4",
@@ -167,7 +175,7 @@
           }
         ],
         "default": "2",
-        "info": "Valid when container width is less than or equal to Breakpoint #2 but greater than Breakpoint #3 (Breakpoint #2 >= Number of Columns > Breakpoint #3)"
+        "info": "Valid when container width is between the width set for Tablet Screens and Mobile Screens i.e. Tablet Screens (Breakpoint#2) >= Container >= Mobile Screens (Breakpoint#3)"
       },
       {
         "type": "select",
@@ -192,7 +200,7 @@
           }
         ],
         "default": "1",
-        "info": "Valid when container width is less than Breakpoint #3 (Number of Columns < Breakpoint #3)"
+        "info": "Valid when container width is less than the width set for Mobile Screens i.e. Container < Mobile Screens (Breakpoint#3)"
       },
       {
         "type": "header",
@@ -215,4 +223,4 @@
         "default": "masonry"
       }
     ]
-  }
+  }  

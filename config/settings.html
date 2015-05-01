@@ -27,6 +27,7 @@
         <select name="store_locator_use_selectBox">
           <option value="dropdown" selected="selected">Drop-down Style</option>
           <option value="links">Links-based Style</option>
+          <option value="linksanddropdown">Links-based Style for Desktop, drop-down for Tablet and Mobile</option>
           <option value="none">No menu navigation, just show a long list of all the Retailers</option>
         </select>
       </td>
@@ -82,6 +83,7 @@
      <tr>
       <th>
         <label for="store_locator_breakpoint_1">Breakpoint 1 (bigger screens)  </label>
+        <span>Expressed in pixels</span>
       </th>
       <td>
         <input type="text" id="store_locator_breakpoint_1" name="store_locator_breakpoint_1" value="1164" />
@@ -90,6 +92,7 @@
      <tr>
       <th>
         <label for="store_locator_breakpoint_2">Breakpoint 2 (tablet screens)  </label>
+        <span>Expressed in pixels</span>
       </th>
       <td>
         <input type="text" id="store_locator_breakpoint_2" name="store_locator_breakpoint_2" value="767" />
@@ -98,6 +101,7 @@
      <tr>
       <th>
         <label for="store_locator_breakpoint_3">Breakpoint 3 (mobile screens)  </label>
+        <span>Expressed in pixels</span>
       </th>
       <td>
         <input type="text" id="store_locator_breakpoint_3" name="store_locator_breakpoint_3" value="422" />
@@ -105,8 +109,8 @@
     </tr>
     <tr>
       <th>
-        <label for="store_locator_columnNum_1">Columns for bigger screens  </label>
-        <span>Valid when container width is greater than Breakpoint #1 (Container &gt; Breakpoint #1)</span>
+        <label for="store_locator_columnNum_1">Columns for Large screens</label>
+        <span>Valid when container width is greater than the width set for Bigger Screens i.e. Container &gt; Bigger Screens (Breakpoint#1)</span>
       </th>
       <td>
         <select name="store_locator_columnNum_1">
@@ -119,8 +123,8 @@
     </tr>
     <tr>
       <th>
-        <label for="store_locator_columnNum_2">Columns for Large screens  </label>
-        <span>Valid when container width is less than or equal to Breakpoint #1 but greater than Breakpoint #2 (Breakpoint #1 &gt;= Number of Columns &gt; Breakpoint #2)
+        <label for="store_locator_columnNum_2">Columns for Desktop screens</label>
+        <span>Valid when container width is between the width set for Bigger Screens and Tablet Screens i.e. Bigger Screens (Breakpoint#1) &gt;= Container &gt; Tablet Screens (Breakpoint#2)
         </span>
       </th>
       <td>
@@ -134,8 +138,8 @@
     </tr>
     <tr>
       <th>
-        <label for="store_locator_columnNum_3">Columns for Medium-width screens  </label>
-        <span>Valid when container width is less than or equal to Breakpoint #2 but greater than Breakpoint #3 (Breakpoint #2 &gt;= Number of Columns &gt; Breakpoint #3)
+        <label for="store_locator_columnNum_3">Columns for Tablet screens</label>
+        <span>Valid when container width is between the width set for Tablet Screens and Mobile Screens i.e. Tablet Screens (Breakpoint#2) &gt;= Container &gt;= Mobile Screens (Breakpoint#3)
         </span>
       </th>
       <td>
@@ -149,8 +153,8 @@
     </tr>
     <tr>
       <th>
-        <label for="store_locator_columnNum_4">Columns for Mobile screens  </label>
-        <span>Valid when container width is less than Breakpoint #3 (Number of Columns &lt; Breakpoint #3)
+        <label for="store_locator_columnNum_4">Columns for Mobile screens</label>
+        <span>Valid when container width is less than the width set for Mobile Screens i.e. Container &lt; Mobile Screens (Breakpoint#3)
         </span>
       </th>
       <td>
