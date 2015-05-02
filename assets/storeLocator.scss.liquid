@@ -194,53 +194,11 @@
 
 // Generic Styling 
 
-$mobile-width: {{settings.store_locator_breakpoint_3}}px;
-$tablet-width: {{settings.store_locator_breakpoint_2}}px;
-$desktop-width:{{settings.store_locator_breakpoint_1}}px;
-
-@mixin mobileandtablets {
-  @media (max-width: #{$tablet-width}) {
-    @content;
-  }
-}
-
-@mixin mobile {
-  @media (min-width: #{$mobile-width}) and (max-width: #{$tablet-width - 1px}) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
-    @content;
-  }
-}
-
-@mixin desktop {
-  @media (min-width: #{$desktop-width}) {
-    @content;
-  }
-}
-
-
 {% if settings.store_locator_use_selectBox == "linksanddropdown" %}
-.sorter {
-  @include mobileandtablets {
-    display: block;
-  }
-  @include desktop {
-    display: none;
-  }
-}
-
-.menu-items-wrapper{
-  @include mobileandtablets {
-    display: none;
-  }
-  @include desktop {
-    display: block;
-  }
-}
+.store_locator_tablet .sorter,.store_locator_mobile .sorter {display: block;}
+.sorter{display: none;}
+.store_locator_tablet .menu-items-wrapper,.store_locator_mobile .menu-items-wrapper {display: none;}
+.menu-items-wrapper{display: block;}
 {% endif %}
 
 

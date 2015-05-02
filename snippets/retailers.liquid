@@ -1318,6 +1318,10 @@ var SpaceCalc = {
 	columnNum:1,
 	columnNum : 0,
 	columnWidth : 0,
+	desktopClass:'store_locator_desktop',
+	bigDesktopClass:'store_locator_large_desktop',
+	tabletClass:'store_locator_tablet',
+	mobileClass:'store_locator_mobile',
 	{% if settings.store_locator_order == "masonry" %}
 	gutterwidth : 20,
 	{% else %}
@@ -1331,29 +1335,32 @@ var SpaceCalc = {
  		
    	colWidth : function () {
    		var margT = 0;
-		$w = $('.commonuse').width(); 
-		
+		$w = $('.commonuse .inner').width(); 
 		if ($w < {{settings.store_locator_breakpoint_3}}) {
        	    columnNum  = {{settings.store_locator_columnNum_4}};
+       	    $('html').addClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.desktopClass).removeClass(SpaceCalc.bigDesktopClass);
        	}
        	//less than or equal to breakpoint_2 but greater than breakpoint_3
 		else if ($w <= {{settings.store_locator_breakpoint_2}}) {
        	    columnNum  = {{settings.store_locator_columnNum_3}};
+       	    $('html').addClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.desktopClass).removeClass(SpaceCalc.bigDesktopClass);
        	}
        	//less than or equal to breakpoint_1 but greater than breakpoint_2
        	else if ($w <= {{settings.store_locator_breakpoint_1}}) {
        	    columnNum  = {{settings.store_locator_columnNum_2}};
+       	    $('html').addClass(SpaceCalc.desktopClass).removeClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.bigDesktopClass);
        	}
        	//greater than to breakpoint_1
         else if ($w > {{settings.store_locator_breakpoint_1}}) {
         	columnNum  = {{settings.store_locator_columnNum_1}};
+        	$('html').addClass(SpaceCalc.bigDesktopClass).removeClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.desktopClass);
         }
 
 		$w -= SpaceCalc.gutterwidth*(columnNum-1);
 		columnWidth = Math.floor($w/columnNum);
-		marg = $(".simple-list:first").outerWidth(true) - $(".simple-list:first").outerWidth();
+		marg = $(".retailers_info:first").outerWidth(true) - $(".retailers_info:first").outerWidth();
 	
-		$('.commonuse').find('.simple-list').each(function() {
+		$('.commonuse').find('.retailers_info').each(function() {
 			var $item = $(this);
 			$item.css({width: columnWidth-marg});
 		});
