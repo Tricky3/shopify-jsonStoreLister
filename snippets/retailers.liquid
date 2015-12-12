@@ -8,8 +8,6 @@ $.ajax({
 		theremoteJsonRetailppl = data;
 	}
 });
-
-//JSON all states, don't really need the state's name but at least I can cross-reference easily.
 var usStates = [
     { state: 'ALABAMA', abbreviation: 'AL'},
     { state: 'ALASKA', abbreviation: 'AK'},
@@ -71,15 +69,7 @@ var usStates = [
     { state: 'WISCONSIN', abbreviation: 'WI'},
     { state: 'WYOMING', abbreviation: 'WY' }
 ];
-
-//Get the actual retailers data in
 var data={"retailers":theremoteJsonRetailppl}, output = "", stateLiteral = "", outsideUS = "", physicalStore = "", featured = "", articleClass="";
-
-//console.log(data);
-
-/* =================== Logik :: Cause-and-effect ================================*/
-
-//return an array of objects according to key, value, or key and value matching
 function getObjects(obj, key, val) {
     var objects = [];
     for (var i in obj) {
@@ -87,11 +77,9 @@ function getObjects(obj, key, val) {
         if (typeof obj[i] == 'object') {
             objects = objects.concat(getObjects(obj[i], key, val));    
         } else 
-        //if key matches and value matches or if key matches and value is not passed (eliminating the case where key matches but passed value does not)
         if (i == key && obj[i] == val || i == key && val == '') { //
             objects.push(obj);
         } else if (obj[i] == val && key == ''){
-            //only add if the object is not already in the array
             if (objects.lastIndexOf(obj) == -1){
                 objects.push(obj);
             }
@@ -99,8 +87,6 @@ function getObjects(obj, key, val) {
     }
     return objects;
 }
-
-//return an array of values that match on a certain key
 function getValues(obj, key) {
     var objects = [];
     for (var i in obj) {
@@ -113,12 +99,9 @@ function getValues(obj, key) {
     }
     return objects;
 }
-
-//JavaScript 1.6 / ECMAScript 5 
 function onlyUnique(value, index, self) { 
     return self.indexOf(value) === index;
 }
-
 function cleanArray(actual){
   var newArray = [];
   for(var i = 0; i<actual.length; i++){
@@ -128,7 +111,6 @@ function cleanArray(actual){
   }
   return newArray;
 }
-
 function replaceState(stateString) {
   switch (stateString) {
     		case "AL":
@@ -456,7 +438,6 @@ function replaceState(stateString) {
     		    featured = false;
 		}
 }
-
 function replaceCountry(countryString) {
   switch (countryString) {
     		case "United States":
@@ -468,8 +449,6 @@ function replaceCountry(countryString) {
     		    outsideUS=false;
     		}
 }
-
-//create a sorter that can work with JS objects
 var sortByProperty = function(prop) {
     return function(a,b) {
         if (typeof a[prop] == "number") {
@@ -480,71 +459,46 @@ var sortByProperty = function(prop) {
     };
 };
 
-/* ============================ START ACTING ==============================*/
-
-//Grab all the different states, everywhere in the data, and get them in an Array, remember this thing is case sensitive
 var states = getValues(data,'Province/State');
-//clear out the duplicate ones, and sort alphabetically
 var uniqueStates = cleanArray(states.filter( onlyUnique )).sort();
-//get the compare array prepared
 var all_the_States = getValues(usStates,'abbreviation');
-//cache the totalnumber of Unique States found
 var statesTotal = uniqueStates.length;
-//use a starting State value, to start the visualization of the data
 var startingState="CA";
-//Separate the US Retailers from the Overseas ones, create new arrays as we go
 var usArr = [],overseasArr = [], overseasCountriesArr = [], homelandCountriesArr = [];
-
-
-//Grab all the different countries everywhere in the data, and get them in an Array, remember this thing is case sensitive
 var countries = getValues(data,'Country');
-//clear out the duplicate ones, and sort alphabetically
 var uniqueCountries = cleanArray(countries.filter( onlyUnique )).sort();
-//console.log(uniqueCountries);
-//cache the totalnumber of Unique Countries found
 var countriesTotal = uniqueCountries.length;
 
+{% if settings.store_locator_show_Online %}
+var onlineRetailers = getObjects(data,'Province/State','ONLINE');
+var countOnlineStores = onlineRetailers.length;
+{% endif %}
 
 {% if settings.store_locator_show_Special %}
 	{% if settings.store_locator_aggregate_Special %}
-		//get those Special Retailers
 		var specialRetailers = getObjects(data,'Province/State','SPECIAL');
 		specialRetailers.sort(sortByProperty("Name"));
 		var specialRetailersResultArr = [],splitSpecialRetailersArr = [],uniqueSpecials=[];
-
 		for (var i=0,  tot=specialRetailers.length; i < tot; i++) {
     		var splitName 	= specialRetailers[i]["Name"].split("#")[0].trim();
     		var name 		= specialRetailers[i]["Name"];
 			var address 	= specialRetailers[i]["Address"];
 			var address2 	= specialRetailers[i]["Address 2"];
 			var city 		= specialRetailers[i]["City"];
-
-			//console.log(name+' city is '+city);
 			var splitStateArray = [];
 			splitStateArray = specialRetailers[i]["City"].split(',');
-			
 			if (splitStateArray.length>1){
 				splitState 	= specialRetailers[i]["City"].split(',')[1].trim();
 			}
 			else{
 				splitState = "ZZ";
 			}
-
-
-			//console.log('statesplit is '+splitState);
-	
-			//var thestate	= specialRetailers[i]["Province/State"];
 			var country 	= specialRetailers[i]["Country"];
 			var zip 		= specialRetailers[i]["Postal/Zip Code"];
 			var phone 		= specialRetailers[i]["Phone"];
-			//var fax 		= specialRetailers[i]["Fax"];
-			//var email 	= specialRetailers[i]["Email"];
 			var website 	= specialRetailers[i]["Website"];
-			//var hrs 		= specialRetailers[i]["Hours"];
 			var lat 		= specialRetailers[i]["Latitude"];
 			var lng 		= specialRetailers[i]["Longitude"];
-			//var store 	= specialRetailers[i]["Store Group"];
-
 			specialRetailersResultArr.push({
 				'splitName':splitName,
 				'Name':name,
@@ -560,277 +514,199 @@ var countriesTotal = uniqueCountries.length;
 				'Latitude':lat, 
 				'Longitude':lng
 			});
-
-			//Grab all the different Special Retailers' Split Names, and get them in an Array, remember this thing is case sensitive
 			splitSpecialRetailersArr[splitSpecialRetailersArr.length] = splitName; 
 		}
-		//clear out the duplicate ones, and sort alphabetically
 		var uniqueSpecials = cleanArray(splitSpecialRetailersArr.filter( onlyUnique )).sort();
-		//console.log(specialRetailersResultArr);
-		//cache the length
 		var uniqueSpecialsTotal = uniqueSpecials.length;
 	{% endif %}
 {% endif %}
 
-
 for (var x=0;  x < statesTotal; x++) {
 	var state = uniqueStates[x];
 	replaceState(state);
-	
 	if ((outsideUS === true) && (physicalStore === true) && (featured === false)) {
 		overseasArr.push({'state':state,'stateLiteral':stateLiteral});
-		//console.log('Non US store'+state+' stateLiteral '+stateLiteral);
 	}
 	else if ((outsideUS === false) && (physicalStore === true) && (featured === false)) {
 		usArr.push({'state':state,'stateLiteral':stateLiteral});
-		//console.log('US store'+state+' stateLiteral'+stateLiteral);
 	}
 	else{
-		// if it is an online
-		//console.log('online store'+state+' stateLiteral'+stateLiteral);
 	}
 }
 
 for (var x=0;  x < countriesTotal; x++) {
 	var country = uniqueCountries[x];
 	replaceCountry(country);
-	
 	if (outsideUS === true) {
 		homelandCountriesArr.push({'country':country,'countryLiteral':countryLiteral});
-		//console.log('Non US store'+state+' stateLiteral '+stateLiteral);
 	}
 	else {
 		overseasCountriesArr.push({'country':country,'countryLiteral':countryLiteral});
-		//console.log('US store'+state+' stateLiteral'+stateLiteral);
 	}
-
 }
 
-//console.log(overseasCountriesArr);
-
-//the number we want to group at, maybe we can get some settings controlling this?
 var groupdivider = 4;
-//calculate the number of outerloops
 var thelinksWidth = (100/groupdivider);
-
-//calculate the number of outerloops for the USA
 var usStatesTotal = usArr.length;
 var usaStatesOuterloops =  ~~(usStatesTotal/groupdivider);
-/*Overseas Calculations */
-
-//calculate the number of outerloops for the Overseas Retailers
 var overseasCountriesTotal = overseasCountriesArr.length;
-//calculate the number of outerloops
 var overseasCountriesOuterloops =  ~~(overseasCountriesTotal/groupdivider);
-
-//get a percentual value we can use for making everything look nice :)
 var overseasCountriesPercentual_divide = (100 / (overseasCountriesOuterloops + 1 )).toFixed(2);
-
-
-//cache the totalnumber of All the States (should be 50+1 for DC (federal) = 51, but maybe Russia will become a US state one day :)
 var all_the_statesTotal = all_the_States.length;
-//the number we want to group at
-
 var all_states_groupdivider = 13;
-//calculate the number of outerloops
 var all_usaStatesOuterloops =  ~~(all_the_statesTotal/all_states_groupdivider);
-//get a percentual value we can use for making everything look nice :)
 var all_usaPercentual_divide = (100 / (all_usaStatesOuterloops + 1 )).toFixed(2);
 
-
-{% if settings.store_locator_use_selectBox == "dropdown" or settings.store_locator_use_selectBox == "linksanddropdown" %}
+{% if settings.store_locator_use_selectBox == "dropdown" %}
+	articleClass = "commonuse dropdownStyle";
 	output+= '<input id="default-collection-sortby" type="hidden" value="'+startingState.toLowerCase()+'">';
 	output+= '<div class="sorter" style="text-align: center;"><label for="sort-by">Select Location: </label>';
 	output+= '<select id="sort-by">';
 	{% if settings.store_locator_show_Online %}
-		//create the links for the Online stores
-		output+= '<option value="online">Online Stores</option>';
+		if (countOnlineStores){
+			output+= '<option value="online">Online Stores</option>';
+		}
 	{% endif %}
-
-	{% if settings.store_locator_show_Special %}
-		output+= '<option value="special">Special Retailers</option>';
-	{% endif %}
-
-	//create the links for the Overseas Retailers
 	{% if settings.store_locator_show_Overseas %}
 		{% if settings.store_locator_aggreagate_Overseas %}
 			output+= '<option value="international">International Stores</option>';
 		{% else %}
-		output+= '<optgroup label="International Stores">';
 			for (var j= 0; j < overseasCountriesTotal; j++) {
         		overseasCountry = overseasCountriesArr[j].country;
         		overseasCountryLiteral = overseasCountriesArr[j].countryLiteral;
 				output+= '<option value="'+overseasCountry.toLowerCase().replace(/\s+/g, '')+'">'+overseasCountryLiteral.toLowerCase()+'</option>';
 			}
-		output+= '</optgroup>';
 		{% endif %}
 	{% endif %}
-
-	//create the links for the US
-	output+= '<optgroup label="US Stores">';
+	{% if settings.store_locator_show_Special %}
+		if (uniqueSpecialsTotal){
+			output+= '<option value="special">Special Retailers</option>';
+		}
+	{% endif %}
 	for (var j= 0; j < usStatesTotal; j++) {
 	    usState = usArr[j].state;
 	    usStateLiteral = usArr[j].stateLiteral;
-	    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral.toLowerCase()+'</option>';
+	    output+= '<option value="'+usState.toLowerCase().replace(/\s+/g, '')+'">'+usStateLiteral+'</option>';
 	}
-	output+= '</optgroup>';
 	output+= '</select>';
 	output+= '</div>';   
-{% endif %}
-{% if settings.store_locator_use_selectBox == "links" or settings.store_locator_use_selectBox == "linksanddropdown" %}
-	//creating the menu links 
+{% elsif settings.store_locator_use_selectBox == "links" %}
+	articleClass = "commonuse linksStyle";
 	output+= '<div class="menu-items-wrapper"><div class="menu-items container"><div class="inner clearfix">';
-	//create the links for the US
 	output+= '<div class="menu-item-holder US-retailers">';
 	output+= '<h3 class="findus in-us">United States</h3>';
 	output+= '<div class="float-mason">';
 	outerloop:
-    	for (var i=0; i <= usaStatesOuterloops; i++) { //Runs 1 time every 8 states, 2 times for 16 states found ... 
+    	for (var i=0; i <= usaStatesOuterloops; i++) {
     		output+= '<ul class="separator">';
       		for (var j= groupdivider*i; j < groupdivider*i+groupdivider; j++) {
-      			//making sure we're not returning undefined.		
       			if ( j === usStatesTotal) {
 					break outerloop;
         		}
         		usState = usArr[j].state;
         		usStateLiteral = usArr[j].stateLiteral;
         		if (usState === startingState) { var activeclass = " active";	}else { var activeclass = "";}
-				output+= '<li class="retailers_info linked"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-name="'+usStateLiteral.toLowerCase()+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
+				output+= '<li class="retailers_info linked"><a class="togglers'+activeclass+'" id="state-'+usState+'" data-collapse="true" data-collapse-el="#'+usState.toLowerCase().replace(/\s+/g, '')+'" data-id="'+usState.toLowerCase()+'">'+usStateLiteral+'</a></li>';
       		}
       		output+= '</ul>';
     	}
 	output+= '</div></div>';
-
 	{% if settings.store_locator_show_Overseas %}
 		var overseas_shown = "x";
 	{% else %}
 		var overseas_shown = "o";
 	{% endif %}
-
 	{% if settings.store_locator_show_Online %}
 		var online_shown = "x";
 	{% else %}
 		var online_shown = "o";
 	{% endif %}
-
 	{% if settings.store_locator_show_Special %}
 		var special_shown = "x";
 	{% else %}
 		var special_shown = "o";
 	{% endif %}
-
 	output+= '<div class="additional_hold '+overseas_shown+online_shown+special_shown+'">';
-	//End of US retailers
 	{% if settings.store_locator_show_Overseas %}
-		//create the links for the Overseas Retailers
 		output+= '<div class="menu-item-holder overseas-retailers">';
 		output+= '<h3 class="findus in-overseas">Overseas</h3>';
 		output+= '<div class="float-mason">';
 		{% if settings.store_locator_aggreagate_Overseas %}
     		output+= '<ul class="separator">';
-			output+= '<li class="retailers_info linked" id="intenationalHolder"><a class="togglers" id="state-non-us" data-collapse="true" data-collapse-el="#international" data-name="International Stores" data-id="international">All Non-US Stores</a></li>';
+			output+= '<li class="retailers_info linked" id="intenationalHolder"><a class="togglers" id="state-non-us" data-collapse="true" data-collapse-el="#international" data-id="international">All Non-US Stores</a></li>';
     		output+= '</ul>';
     	{% else %}
 			outerloop:
-    			for (var i=0; i <= overseasCountriesOuterloops; i++) { //Runs 1 time every 8 states, 2 times for 16 states found ... 
+    			for (var i=0; i <= overseasCountriesOuterloops; i++) {
     				output+= '<ul class="separator">';
     			  	for (var j= groupdivider*i; j < groupdivider*i+groupdivider; j++) {
-    			  		//making sure we're not returning undefined. 
     			  		if ( j === overseasCountriesTotal) {
 						break outerloop;
         				}
         				overseasCountry = overseasCountriesArr[j].country;
         				overseasCountryLiteral = overseasCountriesArr[j].countryLiteral;
         				if (overseasCountry === startingState) { var data_collapse = "false";	}else { var data_collapse = "true"; }
-						output+= '<li class="retailers_info linked"><a class="togglers" id="country-'+overseasCountry+'" data-collapse="true" data-collapse-el="#'+overseasCountry.toLowerCase().replace(/\s+/g, '')+'" data-name="'+overseasCountryLiteral.toLowerCase()+'" data-id="'+overseasCountry.toLowerCase()+'">'+overseasCountryLiteral.toLowerCase()+'</a></li>';
+						output+= '<li class="retailers_info linked"><a class="togglers" id="country-'+overseasCountry+'" data-collapse="true" data-collapse-el="#'+overseasCountry.toLowerCase().replace(/\s+/g, '')+'" data-id="'+overseasCountry.toLowerCase()+'">'+overseasCountryLiteral.toLowerCase()+'</a></li>';
       				}
       				output+= '</ul>';
     			}
     	{% endif %}
 		output+= '</div></div>';
-	//End of overseas retailers
 	{% endif %}
-
 	{% if settings.store_locator_show_Online %}
-		//create the links for the Online Retailers
-		output+= '<div class="menu-item-holder online-retailers">';
-		output+= '<h3 class="findus in-online">Online</h3>';
-		output+= '<div class="float-mason">';
-		output+= '<ul class="separator" style = "width:100%;">';
-		output+= '<li class="retailers_info linked" id="onlineStateHolder"><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#online" data-name="Online Stores" data-id="online">All Online Stores</a></li>';
-		output+= '</ul>';
-		output+= '</div></div>';
+		if (countOnlineStores){
+			output+= '<div class="menu-item-holder online-retailers">';
+			output+= '<h3 class="findus in-online">Online</h3>';
+			output+= '<div class="float-mason">';
+			output+= '<ul class="separator" style = "width:100%;">';
+			output+= '<li class="retailers_info linked" id="onlineStateHolder"><a class="togglers" id="state-online" data-collapse="true" data-collapse-el="#online" data-id="online">All Online Stores</a></li>';
+			output+= '</ul>';
+			output+= '</div></div>';
+		}
 	{% endif %}
-
 	{% if settings.store_locator_show_Special %}
-		//create the links for the Online Retailers
-		output+= '<div class="menu-item-holder special-retailers">';
-		output+= '<h3 class="findus in-online">Special Retailers</h3>';
-		output+= '<div class="float-mason">';
-		output+= '<ul class="separator" style = "width:100%;">';
-		output+= '<li class="retailers_info linked" id="specialStateHolder"><a class="togglers" id="state-featured" data-collapse="true" data-collapse-el="#special" data-name="Special Retailers" data-id="special">Show our Special Retailers</a></li>';
-		output+= '</ul>';
-		output+= '</div></div>';
+		if (uniqueSpecialsTotal){
+			output+= '<div class="menu-item-holder special-retailers">';
+			output+= '<h3 class="findus in-online">Special Retailers</h3>';
+			output+= '<div class="float-mason">';
+			output+= '<ul class="separator" style = "width:100%;">';
+			output+= '<li class="retailers_info linked" id="specialStateHolder"><a class="togglers" id="state-featured" data-collapse="true" data-collapse-el="#special" data-id="special">Show our Special Retailers</a></li>';
+			output+= '</ul>';
+			output+= '</div></div>';
+		}
 	{% endif %}
-	output+= '</div>';
-	output+= '</div></div></div>';
-{% endif %}
-
-{% if settings.store_locator_use_selectBox == "dropdown"%}
-articleClass = "commonuse dropdownStyle";
-{% endif %}
-
-{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
-articleClass = "commonuse mixedStyle";
-{% endif %}
-
-{% if settings.store_locator_use_selectBox == "links" %}
-articleClass = "commonuse linksStyle";
-{% endif %}
-
-{% if settings.store_locator_use_selectBox == "none" %}
-	{% if settings.store_locator_order == "fitColumns" %}
+output+= '</div>';
+output+= '</div></div></div>';
+{% else %}
+{% if settings.store_locator_order == "fitColumns" %}
 	articleClass = "commonuse nomenuStyle ftclmn";
 	{% else %}
 	articleClass = "commonuse nomenuStyle msnr";
 	{% endif %}
 {% endif %}
-
-//===========================================================================================================================================================
-//===========================================================================================================================================================
-//================================================================creating the databoxes=====================================================================
-//===========================================================================================================================================================
-//===========================================================================================================================================================
-
 output+= '<article class="container '+ articleClass +'">';
-output+= '<div class="inner clearfix">';
-//======================================================= Section 2.1 :: Creating the Homeland Entries =======================================================
-
 {% if settings.store_locator_use_selectBox == "none" %}
 output+= '<div class="fullspan"><h2 class="regionheading">United States</h2></div>';
-output+= '<div class="clearfix float-mason" id="homeland">';
+output+= '<div class="inner clearfix float-mason" id="homeland">';
 {% endif %}
-//Creating the boxes for HomeLand, featured and Special 
+
 for (var x=0;  x < statesTotal; x++) {
 	var state = uniqueStates[x];
-	//get all the objects that contain those unique states
 	var retailersByState = getObjects(data,'Province/State',state);
-	//sort the Objects
 	retailersByState.sort(sortByProperty("Name"));
 	replaceState(state);
-
-	
 	{% if settings.store_locator_aggregate_Special %}
-	
-	//**************************  If it is an Overseas Store or a featured Store, then simply ignore it for parsing
 		if ((outsideUS === true) && (physicalStore === true) && (featured === false) || (outsideUS === true) && (physicalStore === false) && (featured === true)) { } 
 		else {
-			for (var x=0;  x < statesTotal; x++) {
+			if ((physicalStore === true) && (featured === false)) {
+				var theheading = stateLiteral;var domChange = "no-domchange";
+			}
+			else {
+				if (featured === false){
 					var theheading = "Online";var domChange = "onlinewrapped";
 				}
-			
+			}
 	{% else %}
-	//**************************  If it is an Overseas Store then simply ignore it for parsing
 		if ((outsideUS === true) && (physicalStore === true) && (featured === false)) { } 
 		else {
 			if ((physicalStore === true) && (featured === false)) {
@@ -845,19 +721,15 @@ for (var x=0;  x < statesTotal; x++) {
 				}
 			}
 	{% endif %}
-
-
 		{% unless settings.store_locator_use_selectBox == "none" %}
 			if (state === startingState) { var openState = " open";	} else { var openState ="";}
 			output+= '<div class="collapse-item anim-height'+openState+'" id="'+state.toLowerCase().replace(/\s+/g, '')+'">';
 			output+= '<div class="collapse-wrap"><div class="collapse-content">';
 		{% endunless %}
-
 		{% if settings.store_locator_use_selectBox == "none" %}
 			output+= '<div class="simple-list '+domChange+'" data-state="'+stateLiteral.toLowerCase().replace(/\s+/g, '')+'" data-country="non-international">';
 			output+= '<div class="no-collapse"><div class="no-collapse-content">';
 		{% endif %}
-  	
 		output+= '<div class="statehead"><h3 class="thestate">'+theheading+'</h3></div>';
 		{% if settings.store_locator_use_selectBox == "none" %}
 		output+= '<div class="listing-content">';
@@ -870,18 +742,12 @@ for (var x=0;  x < statesTotal; x++) {
 			var address 	= retailersByState[i]["Address"];
 			var address2 	= retailersByState[i]["Address 2"];
 			var city 		= retailersByState[i]["City"];
-			//var thestate	= retailersByState[i]["Province/State"];
 			var country 	= retailersByState[i]["Country"];
 			var zip 		= retailersByState[i]["Postal/Zip Code"];
 			var phone 		= retailersByState[i]["Phone"];
-			//var fax 		= retailersByState[i]["Fax"];
-			//var email 	= retailersByState[i]["Email"];
 			var website 	= retailersByState[i]["Website"];
-			//var hrs 		= retailersByState[i]["Hours"];
 			var lat 		= retailersByState[i]["Latitude"];
 			var lng 		= retailersByState[i]["Longitude"];
-			//var store 	= retailersByState[i]["Store Group"];
-		
 			if ((physicalStore === true) && (featured === false)) {
 				var thestate = retailersByState[i]["Province/State"]; var whereIntheWorld = "usa"; var retailClass="retailers_info";
 			}
@@ -893,57 +759,44 @@ for (var x=0;  x < statesTotal; x++) {
 					var thestate = country; var whereIntheWorld = "featuredstores domchange-featured retailers_info"; var retailClass="featuredClass";
 				}
 			}
-
  			output+= '<div class="times-'+tot+' '+retailClass+' '+whereIntheWorld+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
- 			//Safety Valves, you can never have enough
-			if (website !=="") 	{output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';} 
-			else 				{output+='<li itemprop="url" class="just_the_name">' + name + '</li>';}
-			if (address !=="") 	{output+='<li itemprop="street-address">' + address + '</li>';}
+			if (website !=="") 
+				{output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';} 
+			else 
+				{output+='<li itemprop="url" class="just_the_name">' + name + '</li>';	
+			}
+			if (address !=="") 	{output+='<li itemprop="street-address">' + address + '</li>'; }
 			if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
 			if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="region">' + thestate +' </span><span itemprop="postal-code">'+ zip + '</span></li>';}
 			if (phone !=="")    {output+='<li itemprop="tel">' +phone + '</li>';}
-			//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
 			output+='</ul></div>';
 		}
+		
 		output+= '</div></div></div></div>';
-	}
-}
+	} // end of else loop
+}//end of for loop
 {% if settings.store_locator_use_selectBox == "none" %}
 output+= '</div>';
 {% endif %}
-
-//=========================================================== Section 2.2 :: International Stores ===========================================================
-
 {% if settings.store_locator_show_Overseas %}
-	
 	{% if settings.store_locator_use_selectBox == "none" %}
 	output+= '<div class="fullspan"><h2 class="regionheading">International</h2></div>';
 	output+= '<div class="inner clearfix float-mason" id="overseas">';
 	{% endif %}
-
-	//In case we need the data to be aggregated under a single option`
 	{% unless settings.store_locator_use_selectBox == "none" %}
 		{% if settings.store_locator_aggreagate_Overseas %}
 			if (country === startingState) { var openState = " open"; } else { var openState =""; }
 			output+= '<div class="collapse-item anim-height'+openState+'" id="international"><div class="collapse-wrap"><div class="collapse-content">';
 		{% endif %}
 	{% endunless %}
-
-	// ======================================================= Create Overseas blocks =======================================================
 	for (var x=0;  x < overseasCountriesTotal; x++) {
 		var country = overseasCountriesArr[x].country;
-		//get all the objects that contain those unique states
 		var retailersByCountry = getObjects(data,'Country',country);
-		//sort the Objects
 		retailersByCountry.sort(sortByProperty("Country"));
 		replaceCountry(country);
-
 		var theheading = retailersByCountry[0]["Country"].toLowerCase();
 		var theheadingSanitized = theheading.replace(/\s+/g, '');
-
 		var domChange = "no-domchange"; 
-
-		// We need to remove some containers if we want to aggregate the data...
 		{% unless settings.store_locator_use_selectBox == "none" %}
 			{% if settings.store_locator_aggreagate_Overseas %}
 			{% else %}
@@ -952,13 +805,10 @@ output+= '</div>';
 				output+= '<div class="collapse-wrap"><div class="collapse-content">';
 			{% endif %}
 		{% endunless %}
-
 		{% if settings.store_locator_use_selectBox == "none" %}
 			output+= '<div class="simple-list '+domChange+'" data-country="'+theheadingSanitized+'">';
 			output+= '<div class="no-collapse"><div class="no-collapse-content">';
 		{% endif %}
-
-		
 		output+= '<div class="statehead"><h3 class="thestate">'+theheading+'</h3></div>';
 		{% if settings.store_locator_use_selectBox == "none" %}
 		output+= '<div class="listing-content">';
@@ -973,14 +823,10 @@ output+= '</div>';
 			var country 	= retailersByCountry[i]["Country"];
 			var zip 		= retailersByCountry[i]["Postal/Zip Code"];
 			var phone 		= retailersByCountry[i]["Phone"];
-			//var fax 		= retailersByCountry[i]["Fax"];
-			//var email 	= retailersByCountry[i]["Email"];
 			var website 	= retailersByCountry[i]["Website"];
-			//var hrs 		= retailersByCountry[i]["Hours"];
 			var lat 		= retailersByCountry[i]["Latitude"];
 			var lng 		= retailersByCountry[i]["Longitude"];
 			var thestate    = retailersByCountry[i]["Province/State"];
-
 			output+= '<div class="times-'+tot+' retailers_info '+country+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
 			
 			if (website !=="") {
@@ -992,7 +838,6 @@ output+= '</div>';
 			if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
 			if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="region">' + thestate +' </span><span itemprop="postal-code">'+ zip + '</span></li>';}
 			if (phone !=="") 	{output+='<li itemprop="tel">' +phone + '</li>';}
-			//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
 			output+='</ul></div>';
 		}
 		output+= '</div>';
@@ -1008,45 +853,34 @@ output+= '</div>';
 			output+= '</div></div></div>';
 		{% endif %}
 	}
-	
-	
 	{% if settings.store_locator_use_selectBox == "none" %}
 		output+= '</div>';
 	{% endif %}
-
 	{% unless settings.store_locator_use_selectBox == "none" %}
 		{% if settings.store_locator_aggreagate_Overseas %}
 			output+= '</div></div></div>';
 		{% endif %}
 	{% endunless %}
-
 {% endif %}
-
-//========================================= Section 2.3 :: Creating the Placeholders for the rest of the Online Stores =========================================
-
-//Create the necessary Placeholders for the rest of the Divisions
 {% if settings.store_locator_use_selectBox == "none" %}
 	{% if settings.store_locator_show_Online %}
+	if (countOnlineStores){
 		var theh2Title = "Online";
 		var theIDholder = "onlineStores";
 		output+= '<div class="fullspan">';
 		output+= '<h2 class="regionheading">'+theh2Title+'</h2></div><div id="'+theIDholder+'" class="inner clearfix float-mason">';
-		//output+= '<div class="grid-sizer"></div>';
 		output+= '</div>';
+	}
 	{% endif %}
 {% endif %}
-
-//================================== Section 2.4 :: Creating the Databoxes for the Special Retailers, grouped and ordered ==================================
-
-{% if settings.store_locator_show_Special %}
-	//In case we need the data to be aggregated under a single option`
+	{% if settings.store_locator_show_Special %}
+	if (uniqueSpecialsTotal){
 	{% unless settings.store_locator_use_selectBox == "none" %}
 		{% if settings.store_locator_aggregate_Special %}
 			if (country === startingState) { var openState = " open"; } else { var openState =""; }
 			output+= '<div class="collapse-item anim-height'+openState+'" id="special"><div class="collapse-wrap"><div class="collapse-content">';
 		{% endif %}
 	{% endunless %}
-		
 	{% if settings.store_locator_use_selectBox == "none" %}
 		var theh2Title = "Special Retailers";
 		{% unless settings.store_locator_special_explanatory == blank %}
@@ -1055,83 +889,59 @@ output+= '</div>';
 		var theIDholder = "specialStores";
 		output+= '<div class="fullspan">';
 		output+= '<h2 class="regionheading">'+theh2Title+'</h2></div>';
-	
 		{% if settings.store_locator_aggregate_Special %}
 			output+= '<div id="'+theIDholder+'">';
 		{% else %}
 			output+= '<div id="'+theIDholder+'" class="inner clearfix float-mason">';
 		{% endif %}
-	
 	{% endif %}
-	
-	{% if settings.store_locator_aggregate_Special %}
-		for (var x=0;  x < uniqueSpecialsTotal; x++) {
-			var thesplitName = uniqueSpecials[x];
-			//get all the objects that contain those unique splitNames
-			var specialRetailersBySplitName = getObjects(specialRetailersResultArr,'splitName',thesplitName);
-			//sort the Objects
-			specialRetailersBySplitName.sort(sortByProperty("splitState"));
-			//console.log(specialRetailersBySplitName);
-			var theheading = specialRetailersBySplitName[0]["splitName"];
-			var theheadingSanitized = specialRetailersBySplitName[0]["splitName"].toLowerCase().replace(/\s+/g, '');
-			var domChange = "no-domchange"; 
-					output+= '<div class="fullspan statehead"><h3 class="thestate">'+theheading+'</h3></div>';
-			output+= '<div class="thefeaturedheights inner clearfix float-mason" id="specialfeats-'+x+'">';
-
-			for (var i=0,  tot=specialRetailersBySplitName.length; i < tot; i++) {
-    			var name 		= specialRetailersBySplitName[i]["Name"];
-				var address 	= specialRetailersBySplitName[i]["Address"];
-				var address2 	= specialRetailersBySplitName[i]["Address 2"];
-				var city 		= specialRetailersBySplitName[i]["City"];
-				var thestate	= 'specialfeatured';
-				var country 	= specialRetailersBySplitName[i]["Country"];
-				var zip 		= specialRetailersBySplitName[i]["Postal/Zip Code"];
-				var phone 		= specialRetailersBySplitName[i]["Phone"];
-				var website 	= specialRetailersBySplitName[i]["Website"];
-				var lat 		= specialRetailersBySplitName[i]["Latitude"];
-				var lng 		= specialRetailersBySplitName[i]["Longitude"];
-
-				output+= '<div class="simple-list '+domChange+' times-'+tot+' retailers_info '+thestate+'" data-country="'+theheadingSanitized+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
-		
-				/*
-				if (website !=="") {
-					output+='<li itemprop="name" class="name_with_link"><a class="webres" target="_blank" href="'+website+'">'+name+'</a></li>';
-				} 	else {
-					output+='<li itemprop="url" class="just_the_name">' + name + '</li>';
-				}
-				*/
-				if (address !=="")  {output+='<li itemprop="street-address">' + address + '</li>';}
-				if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
-				if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="postal-code">'+ zip + '</span></li>';}
-				if (phone !=="") 	{output+='<li itemprop="tel">' +phone + '</li>';}
-				//output+='<li class="getdir"><a target="_blank" title="get directions to '+name+'" href="https://www.google.com/maps/dir/Current+Location/'+address+ ' '+ city + ' , ' + thestate +' '+ zip+'">get directions</a></li>';
-				output+='</ul></div>';
-    		}
-			output+= '</div>';
-		}
-	{% endif %}
- 		
- 	{% if settings.store_locator_use_selectBox == "none" %}
- 	output+= '</div></div>';
- 	{% endif %}
-
-	{% unless settings.store_locator_special_explanatory == blank %}
-    output+= '<p id="explanatory"><span class="sup">*</span> {{ settings.store_locator_special_explanatory }}</p>';
-	{% endunless %}
-
+		{% if settings.store_locator_aggregate_Special %}
+			for (var x=0;  x < uniqueSpecialsTotal; x++) {
+				var thesplitName = uniqueSpecials[x];
+				var specialRetailersBySplitName = getObjects(specialRetailersResultArr,'splitName',thesplitName);
+				specialRetailersBySplitName.sort(sortByProperty("splitState"));
+				var theheading = specialRetailersBySplitName[0]["splitName"];
+				var theheadingSanitized = specialRetailersBySplitName[0]["splitName"].toLowerCase().replace(/\s+/g, '');
+				var domChange = "no-domchange"; 
+				output+= '<div class="fullspan statehead"><h3 class="thestate">'+theheading+'</h3></div>';
+				output+= '<div class="thefeaturedheights inner clearfix float-mason" id="specialfeats-'+x+'">';
+				for (var i=0,  tot=specialRetailersBySplitName.length; i < tot; i++) {
+    				var name 		= specialRetailersBySplitName[i]["Name"];
+					var address 	= specialRetailersBySplitName[i]["Address"];
+					var address2 	= specialRetailersBySplitName[i]["Address 2"];
+					var city 		= specialRetailersBySplitName[i]["City"];
+					var thestate	= 'specialfeatured';
+					var country 	= specialRetailersBySplitName[i]["Country"];
+					var zip 		= specialRetailersBySplitName[i]["Postal/Zip Code"];
+					var phone 		= specialRetailersBySplitName[i]["Phone"];
+					var website 	= specialRetailersBySplitName[i]["Website"];
+					var lat 		= specialRetailersBySplitName[i]["Latitude"];
+					var lng 		= specialRetailersBySplitName[i]["Longitude"];
+					output+= '<div class="simple-list '+domChange+' times-'+tot+' retailers_info '+thestate+'" data-country="'+theheadingSanitized+'" itemscope itemtype="http://data-vocabulary.org/Organization"><ul itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">';
+					if (address !=="")  {output+='<li itemprop="street-address">' + address + '</li>';}
+					if (address2 !=="") {output+='<li itemprop="street-address">' + address2 + '</li>';}
+					if (city !=="") 	{output+='<li itemprop="street-address"><span itemprop="locality">' + city + '</span>, <span itemprop="postal-code">'+ zip + '</span></li>';}
+					if (phone !=="") 	{output+='<li itemprop="tel">' +phone + '</li>';}
+					output+='</ul></div>';
+    			}
+				output+= '</div>';
+			}
+		{% endif %}
+ 		{% if settings.store_locator_use_selectBox == "none" %}
+ 		output+= '</div></div>';
+ 		{% endif %}
+		{% unless settings.store_locator_special_explanatory == blank %}
+    		output+= '<p id="explanatory"><span class="sup">*</span> {{ settings.store_locator_special_explanatory }}</p>';
+		{% endunless %}
 	{% unless settings.store_locator_use_selectBox == "none" %}
-	{% if settings.store_locator_aggregate_Special %}
-	output+= '</div></div></div>';
-	{% endif %}
+		{% if settings.store_locator_aggregate_Special %}
+			output+= '</div></div></div>';
+		{% endif %}
 	{% endunless %}
-
-{% endif %}
-
-output+= '</div>';
+	}
+	{% endif %}
 output+= '</article>';
 document.getElementById("retailers_placeholder").innerHTML=output;
-//=========================================================== Section 3.1 :: Javascript Tricks ===========================================================
-
 function debounce(func, wait, immediate) {
 	var timeout;
 	return function() {
@@ -1146,30 +956,16 @@ function debounce(func, wait, immediate) {
 		if (callNow) func.apply(context, args);
 	};
 };
-
-{% if settings.store_locator_use_selectBox == "dropdown" or settings.store_locator_use_selectBox == "linksanddropdown" %}
-	//Use jquery for toggling 
+{% if settings.store_locator_use_selectBox == "dropdown" %}
 	$(document).ready(function() {InitSorter();});
-
 	var InitSorter = function(){
 		var sortElement = $('#sort-by');
-		var togglers = $('a.togglers');
-
-
-		//var linkbtn = $(this);
-
 		sortElement
 			.val($('#default-collection-sortby').val())
 			.bind('change', function() {
 				var closeBtn = ($(this).attr('data-collapse') == 'false') ? true : false;
-				var theVal = $(this).val();
-				var collapseEl = '#'+theVal;
+				var collapseEl = '#'+$(this).val();
 				var collapseItem = $(collapseEl);
-				var lowerVal = theVal.toLowerCase();
-				console.log('lowerVal is '+lowerVal);
-				var collapseItemName = $('*[data-collapse-el="#'+lowerVal+'"]');
-
-				//Open Accordion
 				var toggleCollapse = function(item, type) {
 					if(type == 'close')	{
 						item
@@ -1182,17 +978,12 @@ function debounce(func, wait, immediate) {
               				.addClass('open');
           			}      
         		};
-	        	//Toggle View
         		if(collapseItem.is('.open')) {
           			var itemToClose = collapseItem;
           			if(itemToClose)toggleCollapse(itemToClose, 'close');
         		} 
         		else {
           			if(collapseItem.parents().find('.open').length){
-          				{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
-          				togglers.removeClass('active');
-        				collapseItemName.addClass('active');
-        				{% endif %}
             			toggleCollapse($('.collapse-item.open'), 'close');
             			setTimeout(function(){
               				toggleCollapse(collapseItem, 'open');
@@ -1200,74 +991,45 @@ function debounce(func, wait, immediate) {
           			} 
           			else {
             			toggleCollapse(collapseItem, 'open');
-            			{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
-            			togglers.removeClass('active');
-        	 			collapseItemName.addClass('active');
-        	 			{% endif %}
-
           			}
         		}
   			});
 			sortElement.addClass('hidden');
 			var selectBox = new SelectBox({
     			selectbox:sortElement,
-    			height: 150,
     			changeCallback:function(value){
       				sortElement.trigger('change');
     			}
   			});
-
-  			
-				
-			
-			{% if settings.store_locator_use_selectBox == "linksanddropdown" %}
-  			$('a[data-collapse]').on('click', function(){
-  				var btn = $(this), nameValue = btn.attr('data-name');
-            	selectBox.jumpToValue(nameValue);
-			});
-			{% endif %}
-
-
 		};
-
-{% endif %}
-{% if settings.store_locator_use_selectBox == "links" or settings.store_locator_use_selectBox == "linksanddropdown" %}
+{% elsif settings.store_locator_use_selectBox == "links" %}
 	$(document).ready(function() {
 		$('a[data-collapse]').on('click', function(){
         	var btn = $(this),
         	togglers = $('a.togglers'),
             closeBtn = (btn.attr('data-collapse') == 'false') ? true : false;
             collapseEl = btn.attr('data-collapse-el'),
-            collapseItem = $(collapseEl),
-            nameValue = btn.attr('data-name');
-			
-	        
-	        //Open Accordion
+            collapseItem = $(collapseEl);
         	var toggleCollapse = function(item, type){
           		if(type == 'close'){
             		item
               			.removeClass('open')
               			.height(0);
-		        		//console.log('closing');
           		} 
           		else {
             		item
               		.height(item.find('.collapse-wrap').height())
               		.addClass('open');
-        			//console.log('opening');
 		        }      
         	};
-        	//Toggle View
         	if(collapseItem.is('.open') || closeBtn){
         		var itemToClose = (closeBtn) ? $(btn.attr('data-collapse-section')).find('.collapse-item.open') : collapseItem;
           		if(itemToClose)toggleCollapse(itemToClose, 'close');
         	}
         	else {
           		if(collapseItem.parents().find('.open').length){
-          		//console.log('different panel opening');
           		togglers.removeClass('active');
         		btn.addClass('active');
-        		//btn.attr('data-collapse', 'true');
             	toggleCollapse($('.collapse-item.open'), 'close');
             	setTimeout(function(){
               		toggleCollapse(collapseItem, 'open');
@@ -1275,26 +1037,23 @@ function debounce(func, wait, immediate) {
           		}
           		else {
             		toggleCollapse(collapseItem, 'open');
-             		//console.log('already open else');
-             		//btn.attr('data-collapse', 'false');
              		togglers.removeClass('active');
         	 		btn.addClass('active');
 		        }
         	}
       	});
 	});
-{% endif %}
-{% if settings.store_locator_use_selectBox == "none" %}
-
+{% else %}
 var nonPhysicalHead = $('.onlinewrapped');
 var nonPhysical = $( '.domchange-online' );
 var nonPhysicalPlacehold = $( '#onlineStores');
 {% if settings.store_locator_show_Online %}
-	nonPhysical.addClass('simple-list').detach();
-	nonPhysicalPlacehold.append( nonPhysical );
+	if (countOnlineStores){
+		nonPhysical.addClass('simple-list').detach();
+		nonPhysicalPlacehold.append( nonPhysical );
+	}
 {% endif %}
 nonPhysicalHead.remove();
-
 var featuredHead = $('.featuredwrapped');
 var featuredStore = $( '.domchange-featured' );
 var featuredPlacehold = $( '#specialStores');
@@ -1302,237 +1061,190 @@ var featuredPlacehold = $( '#specialStores');
 	featuredHead.remove();
 {% else %}
 	{% if settings.store_locator_show_Special %}
-		featuredStore.addClass('simple-list').detach();
-		featuredPlacehold.append( featuredStore );
+		if (uniqueSpecialsTotal){
+			featuredStore.addClass('simple-list').detach();
+			featuredPlacehold.append( featuredStore );
+		}
 	{% endif %}
 	featuredHead.remove();
 {% endif %}
-
 {% endif %}
-
-
-
-
-var SpaceCalc = {
-	$w:0, 
-	columnNum:1,
-	columnNum : 0,
-	columnWidth : 0,
-	desktopClass:'store_locator_desktop',
-	bigDesktopClass:'store_locator_large_desktop',
-	tabletClass:'store_locator_tablet',
-	mobileClass:'store_locator_mobile',
-	{% if settings.store_locator_order == "masonry" %}
-	gutterwidth : 20,
-	{% else %}
-		{% unless settings.store_locator_use_selectBox == "none" %}
-			gutterwidth : 20,
-		{% endunless %}
-		{% if settings.store_locator_use_selectBox == "none" %}
-			gutterwidth : 0,
+$(document).ready(function() {
+	var $container, $w, columnNum=1;
+  	$container = $('.float-mason');
+  	colWidth = function () {
+		$w = $('.commonuse').width(), 
+		columnWidth = 0,
+		gutterwidth=20;
+		{% if settings.store_locator_order == "fitColumns" and settings.store_locator_use_selectBox == "none" %}
+			gutterwidth=0;
 		{% endif %}
-	{% endif %}
- 		
-   	colWidth : function () {
-   		var margT = 0;
-		$w = $('.commonuse .inner').width(); 
 		if ($w < {{settings.store_locator_breakpoint_3}}) {
-       	    columnNum  = {{settings.store_locator_columnNum_4}};
-       	    $('html').addClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.desktopClass).removeClass(SpaceCalc.bigDesktopClass);
-       	}
-       	//less than or equal to breakpoint_2 but greater than breakpoint_3
-		else if ($w <= {{settings.store_locator_breakpoint_2}}) {
-       	    columnNum  = {{settings.store_locator_columnNum_3}};
-       	    $('html').addClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.desktopClass).removeClass(SpaceCalc.bigDesktopClass);
-       	}
-       	//less than or equal to breakpoint_1 but greater than breakpoint_2
-       	else if ($w <= {{settings.store_locator_breakpoint_1}}) {
-       	    columnNum  = {{settings.store_locator_columnNum_2}};
-       	    $('html').addClass(SpaceCalc.desktopClass).removeClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.bigDesktopClass);
-       	}
-       	//greater than to breakpoint_1
-        else if ($w > {{settings.store_locator_breakpoint_1}}) {
-        	columnNum  = {{settings.store_locator_columnNum_1}};
-        	$('html').addClass(SpaceCalc.bigDesktopClass).removeClass(SpaceCalc.mobileClass).removeClass(SpaceCalc.tabletClass).removeClass(SpaceCalc.desktopClass);
+            columnNum  = {{settings.store_locator_columnNum_4}};
         }
-
-		$w -= SpaceCalc.gutterwidth*(columnNum-1);
+		else if ($w <= {{settings.store_locator_breakpoint_2}}) {
+            columnNum  = {{settings.store_locator_columnNum_3}};
+        }
+        else if ($w <= {{settings.store_locator_breakpoint_1}}) {
+            columnNum  = {{settings.store_locator_columnNum_2}};
+        }
+        else if ($w > {{settings.store_locator_breakpoint_1}}) {
+            columnNum  = {{settings.store_locator_columnNum_1}};
+        }
+		$w -= gutterwidth*(columnNum-1);
 		columnWidth = Math.floor($w/columnNum);
-		marg = $(".retailers_info:first").outerWidth(true) - $(".retailers_info:first").outerWidth();
-	
-		$('.commonuse').find('.retailers_info').each(function() {
-			var $item = $(this);
-			$item.css({width: columnWidth-marg});
+		$('.commonuse').find('.simple-list').each(function() {
+			var $item = $(this),
+				multiplier_w = $item.attr('class').match(/simple-list(\d)/),
+				width = multiplier_w ? columnWidth*multiplier_w[1]-20 : columnWidth;//,
+			$item.css({
+				width: width,
+			});
 		});
 		return columnWidth;
-	},
-		
+	};
 	{% if settings.store_locator_order == "masonry" %}
-  	isotope : function () {
-  		$container = $('.float-mason');
-		$container.isotope({
-			isResizeBound: false,
-			isFitWidth: false,
-			{% unless settings.store_locator_use_selectBox == "none" %}
-			itemSelector: '.retailers_info',
-			{% endunless %}
-			{% if settings.store_locator_use_selectBox == "none" %}
-			itemSelector: '.simple-list',
-			{% endif %}
-
-			masonry: {
-				columnWidth: SpaceCalc.colWidth(),
-				gutter: SpaceCalc.gutterwidth
-			}
-		});
-	},
-	
+  		isotope = function () {
+			$container.isotope({
+				isResizeBound: false,
+				isFitWidth: false,
+				{% unless settings.store_locator_use_selectBox == "none" %}
+				itemSelector: '.retailers_info',
+				{% endunless %}
+				{% if settings.store_locator_use_selectBox == "none" %}
+				itemSelector: '.simple-list',
+				{% endif %}
+				masonry: {
+					columnWidth: colWidth(),
+					gutter: gutterwidth
+				}
+			});
+		};
 	{% else %}
-	processAutoheight: function(parent,children) {
-		var Normalizer = 0,
-    		maxHeight = -1,
-    		minHeight = 10000,
-    		totalHeight = 0;
-    	//parentWidth = $(parent).outerWidth(true);
-		parentWidth = $w;
-    	$(parent).find(children).each(function(){
-        	height = $(this).outerHeight(true);
-        	maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
-        	minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
-        	totalHeight += height;
-    	});
-    	Normalizer =  Math.ceil((totalHeight - (columnNum * maxHeight)) / (columnNum * minHeight));
-        Normalizer = Normalizer < 0 ? Normalizer=0 : Normalizer;
-        averageColumnHeight = Math.ceil(totalHeight/columnNum);
-        assignedColumnHeight = Math.ceil(maxHeight+(Normalizer*minHeight));
-    	//Start Validation Loops
-    	SpaceCalc.verifyAutoHeight(parent,children,totalHeight,maxHeight,minHeight);
-    	},
-
-    verifyAutoHeight: function(parent,children,totalHeight,maxHeight,minHeight) {
-    	var heightverifier = 0,
-    		columnVerifier = 1,
-    		elementCount = 0,
-			checkTotalAssignedHeight = 0,
-			diff = 0;
-   
-        //Check if the assigned Colum Height manages to reach the Total Height in LESS columns than the expected
-		for (i = 1; i <= columnNum; i++) {
-    		checkTotalAssignedHeight = assignedColumnHeight*i ;
-    		if (checkTotalAssignedHeight > totalHeight) {
-    			if (i == columnNum) {
-    				var diff=checkTotalAssignedHeight-totalHeight;
-    				if (diff<minHeight){
-    					assignedColumnHeight += minHeight;
-    					SpaceCalc.needToRethink(parent,children,totalHeight,maxHeight,minHeight);
+		function processAutoheight(parent,children) {
+			console.log ('====================================');
+			var Normalizer = 0;
+			var heightverifier = 0;
+			var columnVerifier = 1;
+			//var elementCount = 0;
+			var offsetHeight = 0;
+    		var maxHeight = -1;
+    		var minHeight = 10000;
+    		var totalHeight = 0;
+    		parentWidth = $(parent).outerWidth(true); 
+    		$(parent).find(children).each(function(){
+        		height = $(this).outerHeight(true); 
+        		maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
+        		minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
+        		totalHeight += height;
+    		});
+            Normalizer =  Math.ceil((totalHeight - (columnNum * maxHeight)) / (columnNum * minHeight));
+            Normalizer = Normalizer < 0 ? Normalizer=0 : Normalizer;
+           	//var averageColumnHeight = Math.ceil(totalHeight/columnNum);
+            var assignedColumnHeight = Math.ceil(maxHeight+(Normalizer*minHeight)); // Normally distributed
+			for (i = 1; i <= columnNum; i++) {
+    			var checkTotalAssignedHeight = assignedColumnHeight*i ;
+    			if (checkTotalAssignedHeight > totalHeight) {
+    				console.log ('checkTotalAssignedHeight > totalHeight');
+    				if (i == columnNum) {
+    					console.log ('i == columnNum',i,columnNum);
+    					var diff=checkTotalAssignedHeight-totalHeight;
+    					if (diff<minHeight){
+    						assignedColumnHeight += minHeight;
+    					}    					
     				}
+    				else{
+    					console.log ('i !== columnNum',i,columnNum);
+    					if ((assignedColumnHeight - minHeight <= 0) || assignedColumnHeight - minHeight == minHeight) {
+    					}
+    					else{
+    						assignedColumnHeight -= minHeight;
+    					}
+	   				}
     			}
-    			else{
-    				if (assignedColumnHeight - minHeight > minHeight) {
-    					assignedColumnHeight -= minHeight;
-    					SpaceCalc.needToRethink(parent,children,totalHeight,maxHeight,minHeight);
-    				}
-	   			}
-    		}
-		}
-
-        //Check if the assigned Colum Height manages to reach the Total Height in MORE columns than the expected
-        $(parent).find(children).each(function(){
-        	height = $(this).outerHeight(true);
-        	minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
-        	elementCount++;
-       		if (heightverifier <= assignedColumnHeight){
-       			//increase the real height until it reaches the theoretical one, then change column and start again
-       			heightverifier = heightverifier + height;
-       			if (heightverifier > assignedColumnHeight){
-					columnVerifier++;
-					heightverifier = 0;
-       			}
-       		} 	
-       		//beginning a new column 
-        	if (heightverifier===0){heightverifier = height;}
-        	//console.log(parent+' ===== '+elementCount+' ===== Columns : '+columnVerifier+' assignedColumnHeight: '+assignedColumnHeight+' heightverifier: '+heightverifier+' (+height '+height+' )');
-    	});
-
-		//Decide how we should proceed, slowly growing the calc and checking, or if all is good, apply it to the layout
-		if (columnVerifier>columnNum){
-			assignedColumnHeight += minHeight;
-			SpaceCalc.needToRethink(parent,children,totalHeight,maxHeight,minHeight);
-       	}
-       	else{
-       		assignedColumnHeight += 2;//IE fix
-       		SpaceCalc.applyAssignedHeight(parent,assignedColumnHeight);
-       	}
-	},
-
-	needToRethink: function(parent,children,totalHeight,maxHeight,minHeight){
-		//console.log('rethinking for '+parent);
-		SpaceCalc.verifyAutoHeight(parent,children,totalHeight,maxHeight,minHeight);
-	},
-
-	applyAssignedHeight: function(parent,assignedColumnHeight){
-		$(parent).height(assignedColumnHeight);
-	},
-
-	doYourMath : function () {
-		SpaceCalc.colWidth();
-		SpaceCalc.processAutoheight('#homeland','.simple-list');
-		SpaceCalc.processAutoheight('#overseas','.simple-list');
-		SpaceCalc.processAutoheight('#onlineStores','.simple-list');
-		{% if settings.store_locator_aggregate_Special %}
-		for (var x=0;  x < uniqueSpecialsTotal; x++) {
-			SpaceCalc.processAutoheight('#specialfeats-' + x + '','.simple-list');
-			//console.log('processing for #specialfeats-' + x);
-		}
-		{% else %}
-		SpaceCalc.processAutoheight('#specialStores','.simple-list');
-		{% endif %}
-	},
-
-	isotope : function () {
-		$container = $('.float-mason');
-		$container.isotope({
-			isResizeBound: false,
-			isFitWidth: false,
-			{% unless settings.store_locator_use_selectBox == "none" %}
-			itemSelector: '.retailers_info',
-			masonry: {
-				columnWidth: SpaceCalc.colWidth(),
-				gutter: SpaceCalc.gutterwidth
 			}
-			{% endunless %}
-			{% if settings.store_locator_use_selectBox == "none" %}
-			itemSelector: '.simple-list',
-			layoutMode: 'fitColumns',
+			var offsetHeights=[];
+            $(parent).find(children).each(function(){
+        		height = $(this).outerHeight(true);
+        		//minHeight = minHeight < $(this).height() ? minHeight : $(this).height();
+        		//elementCount++;
+       			if (heightverifier <= assignedColumnHeight){
+       				heightverifier += height;
+       				if (heightverifier > assignedColumnHeight){
+						columnVerifier++;
+
+						if (columnVerifier>columnNum){
+							var offsetHeight = +height;
+							offsetHeights.push(offsetHeight);
+        				}
+						heightverifier = 0;
+       				}
+       			} 	
+        		if (heightverifier==0){
+        		 	heightverifier = height;
+        		}
+    		});
+			if(offsetHeights.length > 0) {
+			    var offsetSum = 0;
+				$.each(offsetHeights,function(){offsetSum+=parseFloat(this) || 0;});
+			}
+			if (columnVerifier>columnNum){
+				var addedHeight = offsetSum>minHeight ? offsetSum-minHeight:minHeight;
+					correctAssignedHeight(parent,assignedColumnHeight,addedHeight);
+       		   	}
+       		else {
+       		   	applyAssignedHeight(parent,assignedColumnHeight);
+       		}
+		}
+		function applyAssignedHeight(parent,assignedColumnHeight){
+			$(parent).height(assignedColumnHeight);
+		}
+		function correctAssignedHeight(parent,assignedColumnHeight,minHeight){
+			$(parent).height(assignedColumnHeight+minHeight);
+		}
+		doYourMath = function () {
+			colWidth();
+			processAutoheight('#homeland','.simple-list');
+			processAutoheight('#overseas','.simple-list');
+			processAutoheight('#onlineStores','.simple-list');
+			{% if settings.store_locator_aggregate_Special %}
+			for (var x=0;  x < uniqueSpecialsTotal; x++) {
+				processAutoheight('#specialfeats-' + x + '','.simple-list');
+			}
+			{% else %}
+			processAutoheight('#specialStores','.simple-list');
 			{% endif %}
-		});
-	},
-
-{% endif %}
-}
-
-var InitLayoutCalculation = function(){
-	{% if settings.store_locator_order == "fitColumns" %}
+		};
+		isotope = function () {
+			$container.isotope({
+				isResizeBound: false,
+				isFitWidth: false,
+				{% unless settings.store_locator_use_selectBox == "none" %}
+				itemSelector: '.retailers_info',
+				masonry: {
+					columnWidth: colWidth(),
+					gutter: gutterwidth
+				}
+				{% endunless %}
+				{% if settings.store_locator_use_selectBox == "none" %}
+				itemSelector: '.simple-list',
+				layoutMode: 'fitColumns',
+				{% endif %}
+			});
+		};
 		{% if settings.store_locator_use_selectBox == "none" %}
-		SpaceCalc.doYourMath();
+		doYourMath();
 		{% endif %}
 	{% endif %}
-    SpaceCalc.isotope();
-};
-
-var reLayout = debounce(function() {
-		InitLayoutCalculation();
-	}, 250);
-
-$(window).load(function(){
-	InitLayoutCalculation();
-	$( "#loading" ).fadeOut( "fast", function() {
-    	$( "#loading" ).remove();
-  	});
+  	isotope();
 });
-
-window.addEventListener('resize', reLayout);
-
-
-
+var myEfficientFn = debounce(function() {
+		{% if settings.store_locator_order == "fitColumns" %}
+			{% if settings.store_locator_use_selectBox == "none" %}
+				doYourMath();
+			{% endif %}
+		{% endif %}
+    	isotope();
+	}, 250);
+window.addEventListener('resize', myEfficientFn);
 </script>
