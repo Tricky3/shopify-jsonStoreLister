@@ -477,10 +477,9 @@ var countOnlineStores = onlineRetailers.length;
 {% endif %}
 
 {% if settings.store_locator_show_Special %}
-	{% if settings.store_locator_aggregate_Special %}
-		var specialRetailers = getObjects(data,'Province/State','SPECIAL');
+	var specialRetailers = getObjects(data,'Province/State','SPECIAL');
 		specialRetailers.sort(sortByProperty("Name"));
-		var specialRetailersResultArr = [],splitSpecialRetailersArr = [],uniqueSpecials=[];
+	var specialRetailersResultArr = [],splitSpecialRetailersArr = [],uniqueSpecials=[];
 		for (var i=0,  tot=specialRetailers.length; i < tot; i++) {
     		var splitName 	= specialRetailers[i]["Name"].split("#")[0].trim();
     		var name 		= specialRetailers[i]["Name"];
@@ -520,7 +519,7 @@ var countOnlineStores = onlineRetailers.length;
 		}
 		var uniqueSpecials = cleanArray(splitSpecialRetailersArr.filter( onlyUnique )).sort();
 		var uniqueSpecialsTotal = uniqueSpecials.length;
-	{% endif %}
+	
 {% endif %}
 
 for (var x=0;  x < statesTotal; x++) {
@@ -1124,7 +1123,6 @@ $(document).ready(function() {
 		};
 	{% else %}
 		function processAutoheight(parent,children) {
-			console.log ('====================================');
 			var Normalizer = 0;
 			var heightverifier = 0;
 			var columnVerifier = 1;
@@ -1147,16 +1145,13 @@ $(document).ready(function() {
 			for (i = 1; i <= columnNum; i++) {
     			var checkTotalAssignedHeight = assignedColumnHeight*i ;
     			if (checkTotalAssignedHeight > totalHeight) {
-    				console.log ('checkTotalAssignedHeight > totalHeight');
     				if (i == columnNum) {
-    					console.log ('i == columnNum',i,columnNum);
     					var diff=checkTotalAssignedHeight-totalHeight;
     					if (diff<minHeight){
     						assignedColumnHeight += minHeight;
     					}    					
     				}
     				else{
-    					console.log ('i !== columnNum',i,columnNum);
     					if ((assignedColumnHeight - minHeight <= 0) || assignedColumnHeight - minHeight == minHeight) {
     					}
     					else{
