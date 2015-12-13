@@ -1,4 +1,6 @@
 <script type="text/javascript">
+
+
 var theremoteJsonRetailppl = {};
 $.ajax({
 	url: "{{ 'retailers_data.json' | asset_url | prepend: 'https:' }}",
@@ -99,7 +101,7 @@ function getValues(obj, key) {
     }
     return objects;
 }
-function onlyUnique(value, index, self) { 
+function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 function cleanArray(actual){
@@ -1238,13 +1240,24 @@ $(document).ready(function() {
 	{% endif %}
   	isotope();
 });
-var myEfficientFn = debounce(function() {
-		{% if settings.store_locator_order == "fitColumns" %}
-			{% if settings.store_locator_use_selectBox == "none" %}
-				doYourMath();
-			{% endif %}
+
+var InitLayoutCalculation = function(){
+	{% if settings.store_locator_order == "fitColumns" %}
+		{% if settings.store_locator_use_selectBox == "none" %}
+			doYourMath();
 		{% endif %}
-    	isotope();
-	}, 250);
-window.addEventListener('resize', myEfficientFn);
+	{% endif %}
+    isotope();
+};
+
+var reLayout = debounce(function() {InitLayoutCalculation();}, 250);
+
+$(window).load(function(){
+	InitLayoutCalculation();
+	$( "#loading" ).fadeOut( "fast", function() {
+    	$( "#loading" ).remove();
+  	});
+});
+
+window.addEventListener('resize', reLayout);
 </script>
