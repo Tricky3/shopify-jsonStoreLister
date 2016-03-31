@@ -32,7 +32,7 @@
     "Website": "http://tricky3.uk/"
   },
   {
-    // etc.
+    "etc" : "etc."
   }
 ]
 ```
