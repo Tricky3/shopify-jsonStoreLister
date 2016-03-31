@@ -39,7 +39,7 @@
 __notes__
 * trailing slashes should be escaped
 * designate `"Country": "ONLINE"` for online-only retailers
-* designate `"Province\/State": 'SPECIAL'` for special retailers
+* designate `"Province/State": 'SPECIAL'` for special retailers
 
 ### View Options
 
