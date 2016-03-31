@@ -23,13 +23,13 @@
     "Address": "PO Box 12345",
     "Address 2": "",
     "City": "Santa Barbara",
-    "Province\/State": "CA",
+    "Province/State": "CA",
     "Country": "USA",
-    "Postal\/Zip Code": "78910",
+    "Postal/Zip Code": "78910",
     "Phone": "123.456.7890",
     "Fax": "",
     "Email": "mangling@tricky3.co.uk",
-    "Website": "http:\/\/tricky3.com\/"
+    "Website": "http://tricky3.uk/"
   },
   {
     // etc.
